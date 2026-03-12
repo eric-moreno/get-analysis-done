@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "get-analysis-done"
+version = "1.0.0"
+description = "Agent-driven HEP analysis automation framework"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Eric Moreno"},
+]
+dependencies = [
+    "numpy",
+    "pyyaml",
+    "requests",
+]
+
+[project.optional-dependencies]
+plotting = [
+    "matplotlib",
+    "mplhep",
+]
+stats = [
+    "pyhf",
+    "iminuit",
+    "scipy",
+]
+all = [
+    "get-analysis-done[plotting,stats]",
+]
+dev = [
+    "pytest",
+    "pytest-timeout",
+]
+
+[tool.setuptools.packages.find]
+include = ["gad*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

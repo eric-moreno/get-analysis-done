@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Testing
+.pytest_cache/
+coverage/
+htmlcov/
+
+# Environment
+.env
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Analysis outputs (user-specific)
+analysis/
+workspace/
+
+# Claude Code local config
+CLAUDE.md
+.planning/

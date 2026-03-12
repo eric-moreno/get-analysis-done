@@ -1,0 +1,103 @@
+% =============================================================================
+% Section 5: Background Estimation
+% =============================================================================
+
+\section{Background Estimation}
+\label{sec:background}
+
+% AGENT: Fill from background estimator Wave 2-3 reports
+% Document each background estimation method, control/validation regions,
+% and closure test results.
+
+\subsection{Background Overview}
+\label{sec:background:overview}
+
+The dominant backgrounds in this analysis are [list backgrounds in order of
+importance]. The estimation strategies for each background are summarized
+below.
+
+\subsection{Background 1: [Name]}
+\label{sec:background:bkg1}
+
+% AGENT: Fill background estimation method for the dominant background.
+% Include CR definition, transfer factor derivation, and validation.
+
+This background is estimated using [method: data-driven / semi-data-driven /
+pure MC]. A control region (CR) enriched in [background] events is defined
+by [CR selection criteria].
+
+\subsection{Background 2: [Name]}
+\label{sec:background:bkg2}
+
+% AGENT: Fill second background estimation method.
+
+\subsection{Background 3: [Name]}
+\label{sec:background:bkg3}
+
+% AGENT: Fill third background estimation method.
+
+\subsection{Control and Validation Region Design}
+\label{sec:background:regions}
+
+% AGENT: Fill CR/VR definitions from RegionDefinitions configuration.
+% Document orthogonality with signal region and between CRs.
+
+The control regions (CRs) and validation regions (VRs) are designed to be
+orthogonal to the signal region (SR) and to each other. The region
+definitions are summarized in Table~\ref{tab:region_definitions}.
+
+% AGENT: Fill region definition table from region configuration files.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Control and validation region definitions.}
+  \label{tab:region_definitions}
+  \begin{tabular}{llll}
+    \toprule
+    Region & Target Process & Selection & Purpose \\
+    \midrule
+    % AGENT: Fill from region definitions
+    CR1 & [process] & [selection] & Normalization \\
+    VR1 & [process] & [selection] & Validation \\
+    CR2 & [process] & [selection] & Normalization \\
+    VR2 & [process] & [selection] & Validation \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Closure Tests}
+\label{sec:background:closure}
+
+% AGENT: Fill closure test results from RegionValidator Wave 3 output.
+% Include chi2/ndf values and data/MC agreement metrics.
+
+Closure tests are performed in validation regions to assess the reliability
+of the background estimation. The data/prediction agreement in each VR is
+quantified using a $\chi^2/\text{ndf}$ test.
+
+\subsection{Background Yield Summary}
+\label{sec:background:yields}
+
+% AGENT: Fill yield table from YieldTable output.
+% Include pre-fit yields in CR, VR, and SR (expected).
+
+\begin{table}[htbp]
+  \centering
+  \caption{Pre-fit background yields in control, validation, and signal regions.
+           Signal region yields are blinded expectations from MC.}
+  \label{tab:yields}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Process & CR & VR & SR (expected) \\
+    \midrule
+    % AGENT: Fill from YieldTable.get_yields() output
+    Background 1  & -- & -- & -- \\
+    Background 2  & -- & -- & -- \\
+    Background 3  & -- & -- & -- \\
+    \midrule
+    Total background & -- & -- & -- \\
+    \midrule
+    Signal ($\mu=1$) & -- & -- & -- \\
+    \bottomrule
+  \end{tabular}
+\end{table}

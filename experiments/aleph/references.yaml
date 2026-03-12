@@ -1,0 +1,42 @@
+# ALEPH Key References
+# Papers essential for understanding the ALEPH detector and analyses
+
+key_papers:
+  detector_nim:
+    title: "ALEPH: A detector for electron-positron annihilations at LEP"
+    authors: "ALEPH Collaboration, D. Decamp et al."
+    journal: "Nucl. Instrum. Meth. A294 (1990) 121-178"
+    inspire: "https://inspirehep.net/literature/293873"
+    doi: "10.1016/0168-9002(90)91831-U"
+    description: "Original ALEPH detector design and construction"
+
+  performance_nim:
+    title: "Performance of the ALEPH detector at LEP"
+    authors: "ALEPH Collaboration, D. Buskulic et al."
+    journal: "Nucl. Instrum. Meth. A360 (1995) 481-506"
+    inspire: "https://inspirehep.net/literature/381617"
+    doi: "10.1016/0168-9002(95)00138-7"
+    description: "Comprehensive detector performance including tracking, calorimetry, particle ID"
+
+  z_lineshape:
+    title: "Measurement of the Z resonance parameters at LEP"
+    authors: "ALEPH Collaboration"
+    journal: "Eur. Phys. J. C14, 1-50 (2000)"
+    inspire: "https://inspirehep.net/literature/508684"
+    doi: "10.1007/s100520000338"
+    description: "Precision Z boson measurements including line shape, forward-backward asymmetries"
+
+  energy_flow:
+    title: "Performance of the ALEPH detector at LEP"
+    authors: "ALEPH Collaboration"
+    journal: "Nucl. Instrum. Meth. A360 (1995) 481-506"
+    inspire: "https://inspirehep.net/literature/381617"
+    description: "Energy flow algorithm combining tracking and calorimetry for jet reconstruction"
+
+  electroweak_heavy_flavour:
+    title: "Electroweak measurements in electron-positron collisions at W-boson-pair energies at LEP"
+    authors: "ALEPH, DELPHI, L3, OPAL, LEP Electroweak Working Group"
+    journal: "Phys. Rept. 532 (2013) 119-244"
+    inspire: "https://inspirehep.net/literature/1261662"
+    doi: "10.1016/j.physrep.2013.07.004"
+    description: "Combined LEP electroweak measurements at LEP2 energies"

@@ -1,0 +1,32 @@
+wave: 4
+description: "Systematics and Statistical Model"
+clear_context: true
+
+load_artifacts:
+  - path: "strategy/ANALYSIS_STRATEGY.md"
+    reason: "Strategy defines systematic treatment plan"
+  - path: "selection/REGIONS.md"
+    reason: "Region definitions for systematic evaluation"
+  - path: "selection/BDT_MODEL.md"
+    reason: "BDT templates for fit model"
+  - path: "background/BACKGROUND_YIELDS.md"
+    reason: "Background yields as fit model inputs"
+  - path: "gate-results/gate-3-to-4-RESULT.json"
+    reason: "Gate result confirming background validation"
+
+agents:
+  - systematic-source-evaluator
+  - systematics-fitter
+  - lead-analyst
+
+outputs:
+  - path: "systematics/SYSTEMATIC_SOURCES.md"
+    description: "Systematic uncertainty sources and evaluation methods"
+  - path: "systematics/NP_RANKING.md"
+    description: "Nuisance parameter ranking and impact table"
+  - path: "fit/EXPECTED_LIMIT.md"
+    description: "Expected exclusion limit or measurement sensitivity"
+  - path: "fit/FIT_MODEL.md"
+    description: "Statistical model configuration and validation"
+  - path: "gate-results/gate-4-to-5-RESULT.json"
+    description: "Gate evaluation result for Wave 4 to Wave 5 transition"

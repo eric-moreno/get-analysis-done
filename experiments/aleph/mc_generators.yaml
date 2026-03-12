@@ -1,0 +1,32 @@
+# ALEPH Monte Carlo Generators
+# Generator versions used in ALEPH analyses at LEP
+
+generators:
+  pythia:
+    name: PYTHIA
+    version: "6.1"
+    use: "qq and 4-fermion backgrounds"
+    fragmentation: JETSET
+    note: "Lund string fragmentation model; JETSET 7.4 for hadronization"
+    reference: "T. Sjostrand et al., Comput. Phys. Commun. 135 (2001) 238"
+
+  herwig:
+    name: HERWIG
+    version: "6.2"
+    use: "Fragmentation systematic cross-check"
+    fragmentation: cluster
+    note: "Cluster fragmentation model; used to assess fragmentation uncertainty"
+    reference: "G. Corcella et al., JHEP 01 (2001) 010"
+
+  kk2f:
+    name: KK2f
+    version: "4.19"
+    use: "Z/gamma* production with ISR/FSR"
+    exponentiation: CEEX2
+    note: "Coherent exclusive exponentiation for e+e- -> f fbar with ISR/FSR"
+    reference: "S. Jadach et al., Comput. Phys. Commun. 130 (2000) 260"
+
+detector_simulation:
+  framework: GEANT3
+  version: "3.21"
+  note: "Full ALEPH detector simulation"

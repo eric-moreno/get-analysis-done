@@ -1,0 +1,40 @@
+wave: 5
+description: "Pre-Unblinding Review"
+clear_context: true
+
+load_artifacts:
+  - path: "strategy/ANALYSIS_STRATEGY.md"
+    reason: "Strategy for completeness review"
+  - path: "foundation/LITERATURE_REVIEW.md"
+    reason: "Theory context for note writing"
+  - path: "selection/CUTFLOW.md"
+    reason: "Selection details for analysis note"
+  - path: "selection/REGIONS.md"
+    reason: "Region definitions for analysis note"
+  - path: "background/BACKGROUND_YIELDS.md"
+    reason: "Background results for analysis note"
+  - path: "background/CLOSURE_TESTS.md"
+    reason: "Validation results for review"
+  - path: "systematics/NP_RANKING.md"
+    reason: "Systematic impacts for review"
+  - path: "fit/EXPECTED_LIMIT.md"
+    reason: "Expected sensitivity for review"
+  - path: "fit/FIT_MODEL.md"
+    reason: "Fit model for review"
+  - path: "gate-results/gate-4-to-5-RESULT.json"
+    reason: "Gate result confirming stat model quality"
+
+agents:
+  - note-writer
+  - cross-checker
+  - lead-analyst
+
+outputs:
+  - path: "note/ANALYSIS_NOTE_DRAFT.md"
+    description: "Draft analysis note with all pre-unblinding content"
+  - path: "review/UNBLINDING_CHECKLIST.md"
+    description: "Pre-unblinding review checklist with all items checked"
+  - path: "review/CROSS_CHECK_SUMMARY.md"
+    description: "Summary of all cross-checks performed"
+  - path: "gate-results/gate-5-to-6-RESULT.json"
+    description: "Gate evaluation result for Wave 5 to Wave 6 transition"

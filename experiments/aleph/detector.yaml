@@ -1,0 +1,76 @@
+# ALEPH Detector Description
+# Reference: ALEPH NIM A294 (1990) 121-178, NIM A360 (1995) 481-506
+
+experiment: aleph
+collider: LEP
+full_name: "Apparatus for LEP Physics"
+sqrt_s_range: [88.0, 209.0]  # GeV
+
+run_periods:
+  - name: LEP1
+    years: [1989, 1995]
+    sqrt_s: [88.0, 95.0]
+    description: "Z pole running"
+  - name: LEP2
+    years: [1995, 2000]
+    sqrt_s: [130.0, 209.0]
+    description: "Above W-pair threshold"
+
+subsystems:
+  vertex_detector:
+    name: VDET
+    type: silicon_microstrip
+    layers: 2
+    inner_radius_cm: 6.3
+    outer_radius_cm: 10.8
+    resolution_rphi_um: 12
+    resolution_z_um: 12
+    angular_coverage_cos_theta: 0.85
+
+  tracking_chamber:
+    name: TPC
+    type: time_projection_chamber
+    length_m: 4.4
+    outer_diameter_m: 3.6
+    inner_diameter_m: 0.31
+    max_hits: 21
+    resolution_rphi_um: 180
+    angular_coverage_cos_theta: 0.96
+    pad_rows: 21
+    dE_dx_resolution_percent: 4.5
+
+  inner_tracking_chamber:
+    name: ITC
+    type: drift_chamber
+    layers: 8
+    length_m: 2.0
+    resolution_rphi_um: 150
+
+  ecal:
+    name: ECAL
+    type: lead_proportional_wire_chamber
+    layers: 45
+    radiation_lengths: 22
+    granularity: "fine (3 stories: 4+9+9 layers)"
+    resolution: "0.18/sqrt(E) + 0.009"  # sigma_E/E, E in GeV
+    angular_coverage_cos_theta: 0.98
+
+  hcal:
+    name: HCAL
+    type: iron_streamer_tube
+    layers: 23
+    interaction_lengths: 7.2
+    resolution: "0.85/sqrt(E)"  # sigma_E/E, E in GeV
+    angular_coverage_cos_theta: 0.95
+
+  magnet:
+    type: superconducting_solenoid
+    field_tesla: 1.5
+    inner_radius_m: 2.65
+    length_m: 6.4
+
+  luminosity_monitor:
+    name: LCAL
+    type: lead_proportional_wire_chamber
+    angular_coverage_mrad: [45, 190]
+    description: "Luminosity calorimeter for Bhabha event counting"

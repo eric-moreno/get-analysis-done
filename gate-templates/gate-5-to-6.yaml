@@ -1,0 +1,28 @@
+# Gate: Wave 5 -> Wave 6 (Unblinding -> Results & Interpretation)
+# Validates unblinding checklist, signal injection recovery, and blinding integrity.
+
+gate: "Wave 5 -> Wave 6"
+description: "Unblinding readiness and integrity checks"
+criteria:
+  - metric: unblinding_checklist_complete
+    operator: "=="
+    threshold: "true"
+    source: "wave-5/unblinding-metrics.json"
+    field: "checklist_complete"
+  - metric: signal_injection_recovery
+    operator: ">="
+    threshold: 0.90
+    source: "wave-5/unblinding-metrics.json"
+    field: "signal_injection_recovery"
+  - metric: blinding_integrity
+    operator: "=="
+    threshold: "pass"
+    source: "wave-5/unblinding-metrics.json"
+    field: "blinding_integrity"
+  - metric: asimov_fit_exists
+    type: file_exists
+    path: "wave-5/asimov_fit.json"
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-lead-analyst"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

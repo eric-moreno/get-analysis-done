@@ -1,0 +1,112 @@
+% =============================================================================
+% Section 8: Expected Results
+% =============================================================================
+
+\section{Expected Results}
+\label{sec:expected}
+
+% AGENT: Fill expected limit value and Brazil band plot from Wave 4
+% This section presents the full set of expected results before unblinding.
+
+\subsection{Expected Upper Limit}
+\label{sec:expected:limit}
+
+% AGENT: Fill expected limit from Fitter.expected_limit() output.
+% Include central value and +/-1,2 sigma bands.
+
+The expected 95\% CL$_\text{s}$ upper limit on the signal strength parameter
+$\mu$ is determined using the asymptotic approximation with an Asimov dataset.
+The results are summarized in Table~\ref{tab:expected_limit}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Expected 95\% CL$_\text{s}$ upper limit on the signal strength
+           $\mu$ from the Asimov fit.}
+  \label{tab:expected_limit}
+  \begin{tabular}{lr}
+    \toprule
+    Quantity & Value \\
+    \midrule
+    % AGENT: Fill from Fitter.expected_limit() output
+    $-2\sigma$ expected & [value] \\
+    $-1\sigma$ expected & [value] \\
+    Median expected     & [value] \\
+    $+1\sigma$ expected & [value] \\
+    $+2\sigma$ expected & [value] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Fit Diagnostics}
+\label{sec:expected:diagnostics}
+
+% AGENT: Fill fit diagnostic results from Diagnostics.run_all_diagnostics()
+% on the Asimov dataset. Include goodness-of-fit, NP pulls, and constraints.
+
+The quality of the statistical model is assessed through several diagnostic
+tests performed on the Asimov dataset.
+
+\subsubsection{Nuisance Parameter Pulls}
+
+% AGENT: Include NP pull plot from Diagnostics output.
+% Verify all pulls are within +/-2 sigma of nominal.
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual pull plot path from Wave 4 diagnostics
+  % \includegraphics[width=0.8\textwidth]{figures/np_pulls_asimov.pdf}
+  \caption{Post-fit nuisance parameter pulls from the Asimov fit.
+           All parameters are expected to be consistent with their
+           pre-fit values.}
+  \label{fig:np_pulls}
+\end{figure}
+
+\subsubsection{Nuisance Parameter Ranking}
+
+% AGENT: Include NP ranking plot showing impact on mu.
+% Top-ranked NPs indicate dominant systematic effects.
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual ranking plot path from Wave 4 diagnostics
+  % \includegraphics[width=0.8\textwidth]{figures/np_ranking_asimov.pdf}
+  \caption{Ranking of nuisance parameters by their impact on the signal
+           strength $\mu$, evaluated from the Asimov fit.}
+  \label{fig:np_ranking}
+\end{figure}
+
+\subsubsection{Correlation Matrix}
+
+% AGENT: Include correlation matrix plot for the most correlated NPs.
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual correlation matrix path from Wave 4 diagnostics
+  % \includegraphics[width=0.7\textwidth]{figures/correlation_matrix_asimov.pdf}
+  \caption{Correlation matrix of the most correlated nuisance parameters
+           from the Asimov fit.}
+  \label{fig:correlation}
+\end{figure}
+
+\subsubsection{Likelihood Scan}
+
+% AGENT: Include likelihood scan plot for the POI (mu).
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual likelihood scan path from Wave 4 diagnostics
+  % \includegraphics[width=0.6\textwidth]{figures/likelihood_scan_asimov.pdf}
+  \caption{Profile likelihood ratio scan as a function of the signal
+           strength $\mu$ for the Asimov dataset.}
+  \label{fig:likelihood_scan}
+\end{figure}
+
+\subsection{Sensitivity Optimization}
+\label{sec:expected:optimization}
+
+% AGENT: Fill sensitivity optimization summary from SensitivityOptimizer results.
+% Document any selection or categorization adjustments made to improve sensitivity.
+
+The analysis sensitivity was optimized by [optimization procedure description].
+The final expected limit of $\mu < $ [value] at 95\% CL represents an
+improvement of [factor] compared to [baseline/previous configuration].

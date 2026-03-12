@@ -1,0 +1,45 @@
+# Experiment Object Definitions Template
+#
+# Copy this file to experiments/{your_experiment}/objects.yaml and
+# fill in the object definitions relevant to your analysis.
+# See experiments/aleph/objects.yaml for a complete example.
+#
+# Each object has:
+#   description: Human-readable description
+#   reference: Publication or note reference for the cuts
+#   cuts: List of selection cuts (variable, operator, threshold, unit, absolute)
+#   metadata: Expected performance (efficiency, fake_rate, notes)
+#
+# Operators: "==", "!=", ">", ">=", "<", "<="
+# Set absolute: true for cuts on |variable| (e.g., |eta| < 2.5)
+
+example_track:
+  description: "Example good track selection"
+  reference: "Your publication reference here"
+  cuts:
+    - variable: pt
+      operator: ">"
+      threshold: 0.0
+      unit: GeV
+    - variable: eta
+      operator: "<"
+      threshold: 2.5
+      absolute: true
+  metadata:
+    expected_efficiency: 0.0
+    fake_rate: 0.0
+    note: "Replace with your experiment's track selection"
+
+# Add more objects as needed:
+# example_jet:
+#   description: "Jet definition"
+#   algorithm: anti_kt  # or durham, cambridge, etc.
+#   parameters:
+#     R: 0.4
+#   cuts:
+#     - variable: pt
+#       operator: ">"
+#       threshold: 25.0
+#       unit: GeV
+#   metadata:
+#     note: "Replace with your jet definition"

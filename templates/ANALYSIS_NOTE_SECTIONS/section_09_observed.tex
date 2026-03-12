@@ -1,0 +1,136 @@
+% =============================================================================
+% Section 9: Observed Results
+% =============================================================================
+% AGENT: This section is ONLY filled after unblinding (Wave 6).
+% Do NOT populate during Wave 5. All placeholders below are for post-unblinding use.
+% =============================================================================
+
+\section{Observed Results}
+\label{sec:observed}
+
+% AGENT: This entire section is completed AFTER the unblinding procedure
+% described in Appendix~\ref{sec:blinding}. Do NOT fill any subsection
+% until blinding_status in STATE.md is set to UNBLINDED.
+
+\subsection{Observed Upper Limit}
+\label{sec:observed:limit}
+
+% AGENT: Fill observed limit from Fitter.observed_limit() result
+% Include observed value and comparison with expected bands.
+
+The observed 95\% CL$_\text{s}$ upper limit on the signal strength
+parameter $\mu$ is:
+\begin{equation}
+  \mu_\text{obs}^{95} = [\text{value}]
+\end{equation}
+
+% AGENT: Fill observed Brazil band plot from Fitter output with observed data.
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual observed Brazil band plot path
+  % \includegraphics[width=0.7\textwidth]{figures/brazil_band_observed.pdf}
+  \caption{Observed and expected 95\% CL$_\text{s}$ upper limits on the
+           signal strength $\mu$. The observed limit is shown as a solid
+           line, with the expected median and $\pm 1\sigma$, $\pm 2\sigma$
+           bands.}
+  \label{fig:brazil_observed}
+\end{figure}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Observed and expected 95\% CL$_\text{s}$ upper limits on $\mu$.}
+  \label{tab:observed_limit}
+  \begin{tabular}{lr}
+    \toprule
+    Quantity & Value \\
+    \midrule
+    % AGENT: Fill from Fitter output after unblinding
+    Observed            & [value] \\
+    $-2\sigma$ expected & [value] \\
+    $-1\sigma$ expected & [value] \\
+    Median expected     & [value] \\
+    $+1\sigma$ expected & [value] \\
+    $+2\sigma$ expected & [value] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Post-fit Yields}
+\label{sec:observed:yields}
+
+% AGENT: Fill post-fit yields from Fitter.fit() result with observed data.
+% Show comparison of pre-fit and post-fit yields in all regions.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Post-fit yields in all analysis regions after the fit to observed data.}
+  \label{tab:postfit_yields}
+  \begin{tabular}{lrrr}
+    \toprule
+    Process & CR (post-fit) & VR (post-fit) & SR (post-fit) \\
+    \midrule
+    % AGENT: Fill from Fitter post-fit results
+    Background 1  & -- & -- & -- \\
+    Background 2  & -- & -- & -- \\
+    Background 3  & -- & -- & -- \\
+    \midrule
+    Total background & -- & -- & -- \\
+    Data             & -- & -- & -- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Post-fit Diagnostics}
+\label{sec:observed:diagnostics}
+
+% AGENT: Fill post-fit diagnostics from Diagnostics.run_all_diagnostics()
+% with observed data. Compare with Asimov diagnostics from Section 8.
+
+\subsubsection{Post-fit Nuisance Parameter Pulls}
+
+% AGENT: Include post-fit NP pull plot with observed data.
+% Flag any pulls exceeding +/-2 sigma for investigation.
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual post-fit pull plot from observed data fit
+  % \includegraphics[width=0.8\textwidth]{figures/np_pulls_observed.pdf}
+  \caption{Post-fit nuisance parameter pulls from the fit to observed data.}
+  \label{fig:np_pulls_observed}
+\end{figure}
+
+\subsubsection{Post-fit Correlation Matrix}
+
+\begin{figure}[htbp]
+  \centering
+  % AGENT: Replace with actual post-fit correlation matrix from observed data
+  % \includegraphics[width=0.7\textwidth]{figures/correlation_matrix_observed.pdf}
+  \caption{Correlation matrix from the fit to observed data.}
+  \label{fig:correlation_observed}
+\end{figure}
+
+\subsection{Comparison with Expected Results}
+\label{sec:observed:comparison}
+
+% AGENT: Compare observed results with pre-unblinding expectations.
+% Document any significant deviations and their interpretation.
+
+The observed limit of $\mu < $ [value] is [consistent with / differs from]
+the expected limit of $\mu < $ [expected value]. The ratio of observed to
+expected limits is [ratio], corresponding to a deviation of approximately
+[N]$\sigma$ from the background-only expectation.
+
+\subsection{Post-Unblinding Problems}
+\label{sec:observed:problems}
+
+% AGENT: If any Category A/B/C problems were classified after unblinding,
+% document them here. Read from STATE.md post_unblinding_problems.
+% Category A: cosmetic (proceed), Category B: requires re-blinding,
+% Category C: requires external review.
+% If no problems: state "No post-unblinding problems were identified."
+
+No post-unblinding problems were identified.
+% AGENT: Update the above statement based on STATE.md post_unblinding_problems
+% field. If problems exist, describe each with its category, description,
+% resolution, and impact on the result.

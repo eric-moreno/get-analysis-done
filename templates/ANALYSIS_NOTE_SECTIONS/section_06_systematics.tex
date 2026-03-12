@@ -1,0 +1,85 @@
+% =============================================================================
+% Section 6: Systematic Uncertainties
+% =============================================================================
+
+\section{Systematic Uncertainties}
+\label{sec:systematics}
+
+% AGENT: Fill from systematic evaluator Wave 4 report
+% Document all systematic uncertainty sources, their estimation methods,
+% and impact on the final result.
+
+Systematic uncertainties arise from experimental effects (detector response,
+calibration) and theoretical modelling (cross-sections, parton shower,
+PDF). Each uncertainty is implemented as a nuisance parameter in the
+statistical model.
+
+\subsection{Experimental Systematics}
+\label{sec:systematics:experimental}
+
+% AGENT: Fill experimental systematics from SystematicEvaluator output.
+% Include source, method of evaluation, correlation scheme, and magnitude.
+
+\begin{itemize}
+  \item \textbf{Luminosity:} [uncertainty value]\% uncertainty on the
+        integrated luminosity measurement.
+  \item \textbf{Jet energy scale (JES):} Evaluated using [method].
+  \item \textbf{Jet energy resolution (JER):} Evaluated using [method].
+  \item \textbf{$b$-tagging efficiency:} Scale factor uncertainties evaluated
+        per working point.
+  \item \textbf{Lepton identification:} [description if applicable].
+  \item \textbf{Trigger efficiency:} [description].
+\end{itemize}
+
+\subsection{Theory and Modelling Systematics}
+\label{sec:systematics:theory}
+
+% AGENT: Fill theory systematics from SystematicEvaluator output.
+% Include generator comparison, scale variations, PDF uncertainties,
+% and parton shower variations.
+
+\begin{itemize}
+  \item \textbf{Cross-section:} [uncertainty]\% on [process] cross-section.
+  \item \textbf{Generator modelling:} Evaluated by comparing [generator A]
+        and [generator B].
+  \item \textbf{Scale variations:} Renormalization and factorization scale
+        varied independently by factors of 0.5 and 2.0.
+  \item \textbf{PDF uncertainty:} Evaluated using [PDF set] error sets.
+  \item \textbf{Parton shower:} Evaluated by comparing [PS A] and [PS B].
+\end{itemize}
+
+\subsection{Systematic Uncertainty Summary}
+\label{sec:systematics:summary}
+
+% AGENT: Fill systematics summary table from SystematicEvaluator ranking.
+% Include source, type (exp/theory), correlation, magnitude, and impact on mu.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Summary of systematic uncertainties. Impact on the signal strength
+           $\mu$ is evaluated from the fit to Asimov data.}
+  \label{tab:systematics}
+  \begin{tabular}{llllr}
+    \toprule
+    Source & Type & Correlation & Magnitude & $\Delta\mu$ \\
+    \midrule
+    % AGENT: Fill from SystematicEvaluator.rank_impacts() output
+    [source 1] & Exp.    & Correlated   & [mag] & [impact] \\
+    [source 2] & Theory  & Uncorrelated & [mag] & [impact] \\
+    [source 3] & Exp.    & Correlated   & [mag] & [impact] \\
+    \midrule
+    Total systematic & -- & -- & -- & [total] \\
+    Statistical      & -- & -- & -- & [stat]  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Nuisance Parameter Pruning}
+\label{sec:systematics:pruning}
+
+% AGENT: Fill pruning results from workspace builder.
+% Document threshold used and number of NPs before/after pruning.
+
+Nuisance parameters with an effect smaller than [threshold]\% on any
+bin yield are pruned from the statistical model to improve fit stability.
+This reduces the number of nuisance parameters from [N_before] to [N_after].

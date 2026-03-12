@@ -1,0 +1,47 @@
+# Experiment Detector Description Template
+#
+# Copy this directory to experiments/{your_experiment}/ and fill in
+# the values below.  Required fields are marked (REQUIRED).
+# See experiments/aleph/ for a complete reference implementation.
+
+# (REQUIRED) Short experiment identifier, lowercase
+experiment: my_experiment
+
+# (REQUIRED) Collider name
+collider: MY_COLLIDER
+
+# Full experiment name
+full_name: "My Experiment Full Name"
+
+# Center-of-mass energy range in GeV
+sqrt_s_range: [0.0, 0.0]
+
+# Run periods (list)
+run_periods:
+  - name: Run1
+    years: [2000, 2005]
+    sqrt_s: [0.0, 0.0]
+    description: "First data-taking period"
+
+# Detector subsystems
+# Add entries for each major subsystem relevant to your analysis.
+# Common subsystem types: silicon_pixel, silicon_microstrip,
+# drift_chamber, time_projection_chamber, lead_tungstate,
+# liquid_argon, iron_scintillator, superconducting_solenoid
+subsystems:
+  tracking:
+    name: TRACKER
+    type: placeholder_type
+    layers: 0
+    resolution_rphi_um: 0
+    angular_coverage_cos_theta: 0.0
+
+  calorimeter:
+    name: CAL
+    type: placeholder_type
+    resolution: "0.0/sqrt(E)"  # sigma_E/E, E in GeV
+    angular_coverage_cos_theta: 0.0
+
+  magnet:
+    type: superconducting_solenoid
+    field_tesla: 0.0

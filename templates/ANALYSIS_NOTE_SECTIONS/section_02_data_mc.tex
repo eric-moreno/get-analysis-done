@@ -1,0 +1,67 @@
+% =============================================================================
+% Section 2: Data and Monte Carlo Samples
+% =============================================================================
+
+\section{Data and Monte Carlo Samples}
+\label{sec:data_mc}
+
+% AGENT: Fill from data explorer Wave 1 report and sample inventory
+% Include dataset identifiers, trigger requirements, data quality criteria.
+
+\subsection{Data Samples}
+\label{sec:data_mc:data}
+
+% AGENT: Fill luminosity, run periods, and trigger information from
+% data explorer Wave 1 report.
+
+The data used in this analysis were collected by [experiment] during
+[run period(s)] at a centre-of-mass energy of \sqrts = [energy],
+corresponding to an integrated luminosity of \lumival.
+Events are selected using [trigger description].
+Standard data quality requirements are applied.
+
+\subsection{Monte Carlo Simulation}
+\label{sec:data_mc:mc}
+
+% AGENT: Fill MC sample details from sample inventory YAML configuration.
+% Include generator versions, PDF sets, parton shower, and detector simulation.
+
+Monte Carlo simulated samples are used to model the signal and background
+processes. The samples are generated using the configurations summarized in
+Table~\ref{tab:mc_samples}.
+
+% AGENT: Fill table rows from sample inventory. Each row should contain:
+% process name, generator, cross-section (pb), filter efficiency, N_events.
+% Use data from gad/config/samples/*.yaml files.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Summary of Monte Carlo samples used in this analysis.}
+  \label{tab:mc_samples}
+  \begin{tabular}{lllrr}
+    \toprule
+    Process & Generator & $\sigma$ [pb] & Filter eff. & $N_\text{events}$ \\
+    \midrule
+    % AGENT: Fill signal samples
+    Signal          & [generator] & [xsec] & [eff] & [nevt] \\
+    \midrule
+    % AGENT: Fill background samples
+    Background 1    & [generator] & [xsec] & [eff] & [nevt] \\
+    Background 2    & [generator] & [xsec] & [eff] & [nevt] \\
+    Background 3    & [generator] & [xsec] & [eff] & [nevt] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Corrections and Reweighting}
+\label{sec:data_mc:corrections}
+
+% AGENT: Fill any MC corrections applied (pileup reweighting, scale factors,
+% trigger efficiency corrections) from the analysis configuration.
+
+The following corrections are applied to simulated events:
+\begin{itemize}
+  \item Pileup reweighting to match the observed distribution in data.
+  \item Trigger efficiency scale factors.
+  \item Object reconstruction and identification scale factors.
+\end{itemize}

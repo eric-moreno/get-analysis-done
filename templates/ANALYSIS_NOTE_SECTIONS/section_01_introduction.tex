@@ -1,0 +1,60 @@
+% =============================================================================
+% Section 1: Introduction
+% =============================================================================
+
+\section{Introduction}
+\label{sec:introduction}
+
+% AGENT: Fill physics motivation from theory scout Wave 1 report
+% Describe the theoretical context, why this search is important,
+% and what gap in knowledge it addresses.
+
+The Standard Model of particle physics has been remarkably successful in
+describing fundamental interactions. However, several open questions remain,
+including [theoretical motivation]. This analysis searches for [signal process]
+which would provide evidence for [physics beyond the Standard Model / rare
+process measurement].
+
+% AGENT: Fill signal process description from analysis strategy document
+% Include Feynman diagram reference, production mechanism, decay chain,
+% and expected final state signature.
+
+\subsection{Signal Process}
+\label{sec:intro:signal}
+
+The signal process under study is [process name], produced via [production
+mechanism] and decaying to [final state]. The expected cross-section at
+\sqrts = [energy] is [cross-section value] as computed at [order] in
+perturbative QCD.
+
+% AGENT: Fill previous measurements from literature review
+% Include references to prior searches, existing limits, and how this
+% analysis improves upon them.
+
+\subsection{Previous Measurements}
+\label{sec:intro:previous}
+
+Previous searches for this process have been performed by [experiments].
+The most stringent existing limit is [limit value] at 95\% confidence level,
+obtained by [experiment] using [dataset]~\cite{previous_result}.
+This analysis extends the sensitivity by [improvement description].
+
+% AGENT: Fill analysis overview summarizing the strategy
+% Brief roadmap of the note structure.
+
+\subsection{Analysis Overview}
+\label{sec:intro:overview}
+
+This note describes a search for [signal] using data collected by [experiment]
+at \sqrts = [energy], corresponding to an integrated luminosity of \lumival.
+The analysis employs [key technique, e.g., BDT-based signal extraction] with
+[background estimation method]. The statistical interpretation uses a
+profile likelihood ratio test implemented in \texttt{pyhf}.
+
+The note is organized as follows: Section~\ref{sec:data_mc} describes the
+data and Monte Carlo samples; Section~\ref{sec:objects} defines the
+reconstructed objects; Section~\ref{sec:selection} presents the event
+selection; Section~\ref{sec:background} details the background estimation;
+Section~\ref{sec:systematics} discusses systematic uncertainties;
+Section~\ref{sec:statistical} describes the statistical analysis;
+and Section~\ref{sec:expected} presents the expected results.

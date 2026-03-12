@@ -1,0 +1,28 @@
+# Gate: Wave 6 -> Wave 7 (Results & Interpretation -> Documentation)
+# Validates observed result, cross-check agreement, and post-fit diagnostics.
+
+gate: "Wave 6 -> Wave 7"
+description: "Results quality and cross-check validation"
+criteria:
+  - metric: observed_result_exists
+    type: file_exists
+    path: "wave-6/observed_result.json"
+  - metric: crosscheck_agreement
+    type: cross_check
+    source_a: "wave-6/main_result.json"
+    field_a: "observed_limit"
+    source_b: "wave-6/crosscheck_result.json"
+    field_b: "observed_limit"
+    tolerance: 0.10
+  - metric: post_fit_diagnostics_complete
+    operator: "=="
+    threshold: "true"
+    source: "wave-6/result-metrics.json"
+    field: "post_fit_diagnostics_complete"
+  - metric: result_summary_exists
+    type: file_exists
+    path: "wave-6/result_summary.md"
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-cross-checker"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

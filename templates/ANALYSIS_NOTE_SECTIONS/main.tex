@@ -1,0 +1,90 @@
+% =============================================================================
+% Analysis Note -- Main Document
+% =============================================================================
+% AGENT: Fill title, author list, and date from analysis strategy document
+% AGENT: Update abstract with final analysis summary before circulation
+% =============================================================================
+
+% NOTE: Plain article class per project convention — no experiment-specific document class.
+\documentclass[12pt,a4paper]{article}
+
+% --- Common HEP packages ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xspace}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{siunitx}
+
+% --- Custom commands ---
+% AGENT: Add experiment-specific commands (e.g., \lumival, \sqrts, \processname)
+\newcommand{\lumival}{LUMINOSITY\xspace}
+\newcommand{\sqrts}{\ensuremath{\sqrt{s}}\xspace}
+
+% =============================================================================
+
+\title{%
+  % AGENT: Fill from analysis strategy document
+  Search for [SIGNAL PROCESS] in [FINAL STATE] at \sqrts = [ENERGY]
+}
+
+\author{%
+  % AGENT: Fill author list from collaboration membership
+  Analysis Team
+}
+
+\date{%
+  % AGENT: Fill date of note circulation
+  \today
+}
+
+% =============================================================================
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+% AGENT: Fill abstract summarizing analysis scope, dataset, method, and expected sensitivity
+A search for [signal process] is presented using [dataset description].
+Events are selected requiring [key selection criteria].
+The dominant backgrounds are estimated using [methods].
+Systematic uncertainties are evaluated and a statistical analysis is performed.
+The expected upper limit on the signal cross-section is [expected limit value].
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+% --- Main sections ---
+\input{section_01_introduction}
+\input{section_02_data_mc}
+\input{section_03_objects}
+\input{section_04_selection}
+\input{section_05_background}
+\input{section_06_systematics}
+\input{section_07_statistical}
+\input{section_08_expected}
+
+% --- Section 9: Observed Results ---
+% NOTE: Section 9 is added ONLY after unblinding (Wave 6).
+% Do NOT include this section during the pre-unblinding note (Wave 5).
+% Uncomment the line below after unblinding:
+% \input{section_09_observed}
+
+% --- Appendices ---
+\appendix
+\input{appendix_a_blinding}
+
+% --- Bibliography ---
+% NOTE: bibliography enabled for Wave 7. references.bib generated from all wave report citations.
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}

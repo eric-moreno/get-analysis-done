@@ -1,0 +1,98 @@
+# ALEPH Object Definitions
+# Selection cuts from ALEPH publications (EPJC 14, 2000)
+
+good_track:
+  description: "ALEPH good charged track"
+  reference: "ALEPH EPJC 14 (2000), Section 3.1"
+  cuts:
+    - variable: charge
+      operator: "!="
+      threshold: 0
+    - variable: ntpc
+      operator: ">="
+      threshold: 4
+    - variable: cos_theta
+      operator: "<"
+      threshold: 0.94
+      absolute: true  # |cos(theta)| < 0.94
+    - variable: pt
+      operator: ">"
+      threshold: 0.2
+      unit: GeV
+    - variable: d0
+      operator: "<"
+      threshold: 2.0
+      absolute: true  # |d0| < 2 cm
+      unit: cm
+    - variable: z0
+      operator: "<"
+      threshold: 20.0
+      absolute: true  # |z0| < 20 cm
+      unit: cm
+  metadata:
+    expected_efficiency: 0.99
+    note: "Applied per-particle before counting N_ch"
+
+good_neutral:
+  description: "ALEPH good neutral particle"
+  reference: "ALEPH EPJC 14 (2000), Section 3.1"
+  cuts:
+    - variable: charge
+      operator: "=="
+      threshold: 0
+    - variable: cos_theta
+      operator: "<"
+      threshold: 0.98
+      absolute: true  # |cos(theta)| < 0.98
+    - variable: pmag
+      operator: ">"
+      threshold: 0.4
+      unit: GeV
+  metadata:
+    expected_efficiency: 0.95
+    note: "Neutral energy flow objects from ECAL/HCAL"
+
+jet:
+  description: "Durham jet clustering"
+  algorithm: durham
+  parameters:
+    y_cut: null  # Analysis-dependent; set in analysis config
+  reference: "S. Catani et al., Phys. Lett. B269 (1991) 432"
+  metadata:
+    note: "Durham algorithm standard at LEP; y_cut tuned per analysis"
+
+electron:
+  description: "ALEPH electron identification"
+  reference: "ALEPH EPJC 14 (2000)"
+  cuts:
+    - variable: charge
+      operator: "!="
+      threshold: 0
+    - variable: ntpc
+      operator: ">="
+      threshold: 4
+    - variable: ecal_energy_over_p
+      operator: ">"
+      threshold: 0.5
+  metadata:
+    expected_efficiency: 0.65
+    fake_rate: 0.001
+    note: "E/p matching with ECAL shower shape"
+
+muon:
+  description: "ALEPH muon identification"
+  reference: "ALEPH EPJC 14 (2000)"
+  cuts:
+    - variable: charge
+      operator: "!="
+      threshold: 0
+    - variable: ntpc
+      operator: ">="
+      threshold: 4
+    - variable: hcal_hits
+      operator: ">="
+      threshold: 10
+  metadata:
+    expected_efficiency: 0.86
+    fake_rate: 0.005
+    note: "HCAL hit pattern + muon chamber matching"

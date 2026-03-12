@@ -1,0 +1,35 @@
+wave: 6
+description: "Unblinding"
+clear_context: true
+
+# NOTE: This wave requires blinding_status transition to "unblinded" before execution.
+# The run-analysis workflow will pause and request physicist authorization.
+requires_blinding_transition: "unblinded"
+
+load_artifacts:
+  - path: "strategy/ANALYSIS_STRATEGY.md"
+    reason: "Strategy for interpreting observed results"
+  - path: "note/ANALYSIS_NOTE_DRAFT.md"
+    reason: "Pre-unblinding note to update with observed results"
+  - path: "review/UNBLINDING_CHECKLIST.md"
+    reason: "Completed checklist confirming readiness"
+  - path: "fit/FIT_MODEL.md"
+    reason: "Statistical model for observed data fit"
+  - path: "fit/EXPECTED_LIMIT.md"
+    reason: "Expected result for comparison with observed"
+  - path: "gate-results/gate-5-to-6-RESULT.json"
+    reason: "Gate result confirming unblinding readiness"
+
+agents:
+  - systematics-fitter
+  - cross-checker
+
+outputs:
+  - path: "results/OBSERVED_RESULTS.md"
+    description: "Observed data results: fit output, exclusion limits or measurements"
+  - path: "results/POST_FIT_DIAGNOSTICS.md"
+    description: "Post-fit nuisance parameter pulls, ranking, and goodness-of-fit"
+  - path: "results/CROSS_CHECK_OBSERVED.md"
+    description: "Cross-check of observed results with alternative methods"
+  - path: "gate-results/gate-6-to-7-RESULT.json"
+    description: "Gate evaluation result for Wave 6 to Wave 7 transition"

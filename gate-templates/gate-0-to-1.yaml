@@ -1,0 +1,30 @@
+# Gate: Wave 0 -> Wave 1 (Strategy -> Data Exploration)
+# Validates that analysis strategy is complete and physics scope is defined.
+# NOTE: These are template thresholds. The lead analyst populates actual values
+# during Wave 0 of each analysis.
+
+gate: "Wave 0 -> Wave 1"
+description: "Strategy completeness and physics prompt coverage"
+criteria:
+  - metric: strategy_document_exists
+    type: file_exists
+    path: "wave-0/strategy.md"
+  - metric: physics_prompt_coverage
+    operator: ">="
+    threshold: 1.0
+    source: "wave-0/strategy-metrics.json"
+    field: "physics_prompt_coverage"
+  - metric: signal_region_defined
+    operator: "=="
+    threshold: "true"
+    source: "wave-0/strategy-metrics.json"
+    field: "signal_region_defined"
+  - metric: gate_criteria_approved
+    operator: "=="
+    threshold: "true"
+    source: "wave-0/strategy-metrics.json"
+    field: "gate_criteria_approved"
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-lead-analyst"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

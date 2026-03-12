@@ -1,0 +1,26 @@
+# Gate: Wave 4 -> Wave 5 (Systematics & Stat Model -> Unblinding)
+# Validates NP pulls, expected limit existence, and fit convergence.
+
+gate: "Wave 4 -> Wave 5"
+description: "Statistical model quality and fit validation"
+criteria:
+  - metric: np_pull_max
+    operator: "<="
+    threshold: 2.0
+    source: "wave-4/fit-results.json"
+    field: "np_pull_max"
+  - metric: expected_limit_exists
+    type: file_exists
+    path: "wave-4/expected_limit.json"
+  - metric: fit_convergence
+    operator: "=="
+    threshold: "pass"
+    source: "wave-4/fit-results.json"
+    field: "fit_convergence"
+  - metric: ranking_plot_exists
+    type: file_exists
+    path: "wave-4/np_ranking.json"
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-systematics-fitter"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

@@ -1,0 +1,51 @@
+# ALEPH Detector Performance
+# Reference: ALEPH NIM A360 (1995) 481-506
+
+tracking:
+  momentum_resolution: "sigma(1/pt) = 6e-4 (GeV/c)^-1"
+  momentum_resolution_formula: "delta_p/p = 6e-4 * pt"
+  angular_resolution_mrad: 0.3  # at high momentum
+  impact_parameter_resolution_um: 25  # transverse, high pT
+  impact_parameter_z_resolution_um: 28  # longitudinal, high pT
+  two_track_resolution_mm: 1.0
+  tracking_efficiency: 0.998  # for good_track within acceptance
+  reference: "ALEPH NIM A360 (1995) 481-506"
+
+b_tagging:
+  method: "lifetime-based impact parameter"
+  description: "Combined impact parameter significance using VDET + ITC + TPC"
+  working_points:
+    loose:
+      efficiency: 0.80
+      mistag_rate: 0.10
+    medium:
+      efficiency: 0.65
+      mistag_rate: 0.02
+    tight:
+      efficiency: 0.50
+      mistag_rate: 0.005
+  reference: "ALEPH combined b-tag, EPJC"
+
+ecal:
+  energy_resolution: "0.18/sqrt(E) + 0.009"  # sigma_E/E, E in GeV
+  angular_resolution_mrad: 2.5  # in theta and phi
+  pi0_mass_resolution_MeV: 6.5
+  electron_id_efficiency: 0.65
+  reference: "ALEPH NIM A360 (1995) 481-506"
+
+hcal:
+  energy_resolution: "0.85/sqrt(E)"  # sigma_E/E, E in GeV
+  muon_id_efficiency: 0.86
+  reference: "ALEPH NIM A360 (1995) 481-506"
+
+energy_flow:
+  description: "ALEPH energy flow algorithm combining tracking and calorimetry"
+  jet_energy_resolution: "sigma(E)/E = 0.60/sqrt(E)"  # E in GeV
+  jet_angular_resolution_mrad: 20  # at 45 GeV jet energy
+  reference: "ALEPH NIM A360 (1995) 481-506"
+
+dE_dx:
+  description: "Specific ionization measurement in TPC"
+  resolution_percent: 4.5
+  separation_pi_K_sigma: 2.0  # at momentum ~10 GeV/c
+  reference: "ALEPH NIM A360 (1995) 481-506"

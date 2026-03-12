@@ -1,0 +1,30 @@
+# Gate: Wave 1 -> Wave 2 (Data Exploration -> Selection & MVA)
+# Validates that data samples are inventoried and object definitions are complete.
+
+gate: "Wave 1 -> Wave 2"
+description: "Sample inventory completeness and object definition coverage"
+criteria:
+  - metric: sample_inventory_completeness
+    operator: ">="
+    threshold: 1.0
+    source: "wave-1/exploration-metrics.json"
+    field: "sample_inventory_completeness"
+  - metric: object_definition_coverage
+    operator: ">="
+    threshold: 1.0
+    source: "wave-1/exploration-metrics.json"
+    field: "object_definition_coverage"
+  - metric: literature_review_completeness
+    operator: ">="
+    threshold: 0.80
+    source: "wave-1/exploration-metrics.json"
+    field: "literature_review_completeness"
+  - metric: data_mc_agreement_check
+    operator: "=="
+    threshold: "pass"
+    source: "wave-1/exploration-metrics.json"
+    field: "data_mc_agreement"
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-data-explorer"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

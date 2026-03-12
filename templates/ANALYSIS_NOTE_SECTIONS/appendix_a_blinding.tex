@@ -1,0 +1,197 @@
+% =============================================================================
+% Appendix A: Blinding Protocol
+% =============================================================================
+
+\section{Blinding Protocol}
+\label{sec:blinding}
+
+% AGENT: Document the specific blinding variable and signal region definition
+% from analysis strategy. Read blinding configuration from
+% gad/config/analysis_config.yaml and strategy document.
+
+This appendix documents the blinding protocol followed during this analysis,
+including the staged unblinding sequence, pre-unblinding checklist results,
+signal injection tests, and blinding integrity verification.
+
+\subsection{Staged Unblinding Sequence}
+\label{sec:blinding:stages}
+
+The analysis follows a staged unblinding protocol with four stages, designed
+to minimize confirmation bias and ensure the robustness of the analysis
+before examining signal-region data.
+
+\begin{enumerate}
+  \item \textbf{BLINDED:} Full blinding. Signal region data is never accessed.
+        All analysis development uses sideband data and simulation only.
+        Plots in the signal region show MC-only expectations.
+
+  \item \textbf{SIDEBANDS:} Sideband unblinding. Data in control and validation
+        regions is compared with predictions. No signal region data is
+        examined. Background estimation methods are validated.
+
+  \item \textbf{PARTIAL\_10PCT:} Partial unblinding with 10\% of signal region
+        data. A randomly selected 10\% subset of SR data is examined to
+        check for gross mismodelling. The subset selection is deterministic
+        (based on event number modulo) and does not bias the final result.
+
+  \item \textbf{UNBLINDED:} Full unblinding. The complete signal region dataset
+        is used for the final statistical analysis. This stage is only
+        entered after all pre-unblinding checks have passed.
+\end{enumerate}
+
+% AGENT: Document the specific blinding variable and signal region definition
+% from the analysis strategy. Include which branches/variables define the SR
+% boundary and how the blinding mechanism prevents data access.
+
+The blinding mechanism is enforced at the data loading level through the
+\texttt{BlindingManager} class, which raises a \texttt{BlindingViolationError}
+if signal region data is accessed in an unauthorized blinding state.
+
+\subsection{Pre-Unblinding Checklist}
+\label{sec:blinding:checklist}
+
+% AGENT: Read unblinding_checklist from STATE.md frontmatter.
+% Format as table with Item, Status, Evidence columns.
+% Each checklist item must be marked PASS/FAIL with supporting evidence.
+
+Before proceeding to full unblinding, the following checklist items must
+all be satisfied. The status of each item is recorded in the analysis
+state file and verified by the cross-checker agent.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Pre-unblinding checklist status. All items must pass before
+           proceeding to full unblinding.}
+  \label{tab:checklist}
+  \begin{tabular}{p{5cm}lp{6cm}}
+    \toprule
+    Item & Status & Evidence \\
+    \midrule
+    % AGENT: Read checklist items from STATE.md unblinding_checklist field.
+    % Format each item as a row. Example items:
+    Background model closure in VRs
+      & [PASS/FAIL]
+      & [chi2/ndf values, closure test results] \\
+    \addlinespace
+    Systematic uncertainties evaluated
+      & [PASS/FAIL]
+      & [Number of NPs, coverage tests] \\
+    \addlinespace
+    Expected sensitivity computed
+      & [PASS/FAIL]
+      & [Expected limit value, Asimov fit status] \\
+    \addlinespace
+    Fit diagnostics satisfactory
+      & [PASS/FAIL]
+      & [NP pulls within bounds, no large constraints] \\
+    \addlinespace
+    Signal injection test passed
+      & [PASS/FAIL]
+      & [Pull distribution mean, width] \\
+    \addlinespace
+    Cross-check analysis consistent
+      & [PASS/FAIL]
+      & [Limit comparison, delta/tolerance] \\
+    \addlinespace
+    Analysis note pre-unblinding draft complete
+      & [PASS/FAIL]
+      & [Sections 1--8 reviewed] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Signal Injection Tests}
+\label{sec:blinding:injection}
+
+% AGENT: Read injection test results from Wave 5 cross-checker report.
+% Format as table with mu_injected, mu_hat, sigma_fit, pull, pass/fail.
+
+Signal injection tests are performed to validate that the statistical model
+can correctly recover an injected signal. Asimov datasets are generated with
+various injected signal strengths, and the fitted signal strength
+$\hat{\mu}$ is compared with the injected value.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Signal injection test results. The pull is defined as
+           $(\hat{\mu} - \mu_\text{inj}) / \sigma_{\hat{\mu}}$.
+           All pulls should be within $\pm 2$.}
+  \label{tab:injection}
+  \begin{tabular}{rrrrr}
+    \toprule
+    $\mu_\text{inj}$ & $\hat{\mu}$ & $\sigma_{\hat{\mu}}$
+      & Pull & Status \\
+    \midrule
+    % AGENT: Fill from signal injection test results
+    0.0 & -- & -- & -- & [PASS/FAIL] \\
+    0.5 & -- & -- & -- & [PASS/FAIL] \\
+    1.0 & -- & -- & -- & [PASS/FAIL] \\
+    2.0 & -- & -- & -- & [PASS/FAIL] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Blinding Integrity Verification}
+\label{sec:blinding:integrity}
+
+% AGENT: Read integrity check results from Wave 5 cross-checker report.
+% Document checks performed on SR plots, wave outputs, and git history.
+
+The blinding integrity is verified through the following automated checks:
+
+\begin{itemize}
+  \item \textbf{Signal region plot audit:} All plots in the analysis output
+        directories are scanned to verify that no SR data distributions
+        are present before the appropriate unblinding stage.
+        % AGENT: Fill result: number of plots checked, violations found.
+
+  \item \textbf{Wave output audit:} All wave output files are checked to
+        ensure no SR data values appear in reports or logs.
+        % AGENT: Fill result: number of files checked, violations found.
+
+  \item \textbf{Git history audit:} The git commit history is scanned to
+        verify that no commits contain SR data in committed files.
+        % AGENT: Fill result: number of commits checked, violations found.
+
+  \item \textbf{Blinding state transitions:} The sequence of blinding state
+        transitions is verified against the expected protocol.
+        % AGENT: Fill from STATE.md blinding state transition log.
+\end{itemize}
+
+\subsection{Re-Blinding Events}
+\label{sec:blinding:reblinding}
+
+% AGENT: Read reblind_count and post_unblinding_problems from STATE.md.
+% If reblind_count > 0, describe the event: when it occurred, why
+% re-blinding was triggered, what was fixed, and the subsequent
+% re-unblinding procedure.
+
+% AGENT: If reblind_count == 0, keep the following statement:
+No re-blinding events occurred during this analysis. The blinding protocol
+was followed without interruption from initial blinding through to final
+unblinding.
+
+% AGENT: If reblind_count > 0, replace the above with a description of
+% each re-blinding event in the following format:
+% \begin{enumerate}
+%   \item \textbf{Re-blinding event [N]:}
+%     \begin{itemize}
+%       \item \textbf{Date:} [date from STATE.md]
+%       \item \textbf{Trigger:} Category B problem -- [description]
+%       \item \textbf{Resolution:} [what was fixed]
+%       \item \textbf{Re-unblinding:} [when/how re-unblinding was performed]
+%     \end{itemize}
+% \end{enumerate}
+
+\subsection{Summary}
+\label{sec:blinding:summary}
+
+% AGENT: Provide a brief summary of the blinding protocol outcome.
+% State the final blinding status, number of re-blinding events,
+% and overall assessment of blinding integrity.
+
+The blinding protocol was followed throughout this analysis. The analysis
+progressed through stages BLINDED $\to$ SIDEBANDS $\to$ PARTIAL\_10PCT
+$\to$ UNBLINDED with all pre-unblinding checks passing before each
+transition. [N] re-blinding events occurred. The blinding integrity
+verification found no violations.

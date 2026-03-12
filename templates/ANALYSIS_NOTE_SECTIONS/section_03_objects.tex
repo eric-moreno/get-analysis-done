@@ -1,0 +1,109 @@
+% =============================================================================
+% Section 3: Object Definitions
+% =============================================================================
+
+\section{Object Definitions}
+\label{sec:objects}
+
+% AGENT: Fill from detector specialist Wave 1 report
+% Document all physics object definitions used in the analysis.
+
+This section describes the reconstruction and selection criteria for the
+physics objects used in this analysis. The object definitions follow the
+recommendations of [experiment working group / standard definitions].
+
+\subsection{Tracks}
+\label{sec:objects:tracks}
+
+% AGENT: Fill track selection criteria from object definitions YAML
+% (gad/config/objects/*.yaml). Include pT threshold, eta range, quality cuts.
+
+Tracks are required to satisfy the criteria listed in Table~\ref{tab:track_sel}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Track selection criteria.}
+  \label{tab:track_sel}
+  \begin{tabular}{ll}
+    \toprule
+    Variable & Requirement \\
+    \midrule
+    % AGENT: Fill from object definition config
+    $p_\text{T}$       & $>$ [threshold] GeV \\
+    $|\eta|$            & $<$ [max eta] \\
+    Quality             & [quality requirements] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Jets}
+\label{sec:objects:jets}
+
+% AGENT: Fill jet definition from object definitions YAML.
+% Include algorithm, radius parameter, calibration, JES/JER corrections.
+
+Jets are reconstructed using the [algorithm] algorithm with radius parameter
+$R = $ [value]. Jet energy scale and resolution corrections are applied
+following [calibration reference].
+
+\begin{table}[htbp]
+  \centering
+  \caption{Jet selection criteria.}
+  \label{tab:jet_sel}
+  \begin{tabular}{ll}
+    \toprule
+    Variable & Requirement \\
+    \midrule
+    % AGENT: Fill from object definition config
+    $p_\text{T}$       & $>$ [threshold] GeV \\
+    $|\eta|$            & $<$ [max eta] \\
+    JVT                 & [requirement if applicable] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{$b$-tagged Jets}
+\label{sec:objects:btags}
+
+% AGENT: Fill b-tagging algorithm, working point, efficiency, and
+% scale factors from object definitions YAML.
+
+Jets containing $b$-hadrons are identified using the [algorithm] $b$-tagging
+algorithm at the [working point] working point, corresponding to an average
+efficiency of [efficiency]\% for $b$-jets in simulated $t\bar{t}$ events.
+
+\subsection{Leptons}
+\label{sec:objects:leptons}
+
+% AGENT: Fill electron and muon definitions from object definitions YAML.
+% Include identification, isolation, and overlap removal criteria.
+
+\subsubsection{Electrons}
+
+Electron candidates are reconstructed from [description] and are required
+to satisfy [identification working point] identification criteria.
+
+\subsubsection{Muons}
+
+Muon candidates are reconstructed using [description] and are required
+to satisfy [identification working point] identification criteria.
+
+\subsection{Missing Transverse Energy}
+\label{sec:objects:met}
+
+% AGENT: Fill MET reconstruction details if applicable.
+% Include algorithm version and soft-term treatment.
+
+The missing transverse energy ($E_\text{T}^\text{miss}$) is computed
+from the negative vector sum of the transverse momenta of all calibrated
+physics objects and a soft term accounting for tracks not associated with
+any reconstructed object.
+
+\subsection{Overlap Removal}
+\label{sec:objects:overlap}
+
+% AGENT: Fill overlap removal procedure from analysis configuration.
+% Document the order and criteria for resolving ambiguities.
+
+To avoid double-counting of detector signatures, a sequential overlap
+removal procedure is applied following the priority: [object priority order].

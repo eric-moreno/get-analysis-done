@@ -1,0 +1,30 @@
+# Gate: Wave 2 -> Wave 3 (Selection & MVA -> Background Validation)
+# Validates signal efficiency, background rejection, BDT quality, and CR purity.
+
+gate: "Wave 2 -> Wave 3"
+description: "Selection quality and MVA performance"
+criteria:
+  - metric: signal_efficiency
+    operator: ">="
+    threshold: 0.80
+    source: "wave-2/selection-results.json"
+    field: "preselection.signal_efficiency"
+  - metric: background_rejection
+    operator: ">="
+    threshold: 0.90
+    source: "wave-2/selection-results.json"
+    field: "preselection.background_rejection"
+  - metric: bdt_overtraining_ks
+    operator: ">="
+    threshold: 0.05
+    source: "wave-2/mva-results.json"
+    field: "bdt.overtraining_ks_pvalue"
+  - metric: cr_purity
+    operator: ">="
+    threshold: 0.50
+    source: "wave-2/selection-results.json"
+    field: "control_region.purity"
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-signal-lead"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

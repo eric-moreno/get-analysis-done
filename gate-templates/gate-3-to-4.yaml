@@ -1,0 +1,27 @@
+# Gate: Wave 3 -> Wave 4 (Background Validation -> Systematics & Stat Model)
+# Validates closure tests, chi-squared, and cross-check cutflow agreement.
+
+gate: "Wave 3 -> Wave 4"
+description: "Background validation and closure tests"
+criteria:
+  - metric: closure_test_2sigma
+    operator: "=="
+    threshold: "pass"
+    source: "wave-3/validation-results.json"
+    field: "closure_test_2sigma"
+  - metric: chi_squared_ndf
+    operator: "<="
+    threshold: 2.0
+    source: "wave-3/validation-results.json"
+    field: "chi_squared_ndf"
+  - metric: crosscheck_cutflow_agreement
+    type: cross_check
+    source_a: "wave-3/main-cutflow.json"
+    field_a: "final_yield"
+    source_b: "wave-3/crosscheck-cutflow.json"
+    field_b: "final_yield"
+    tolerance: 0.01
+on_failure:
+  max_retries: 2
+  diagnosis_agent: "gad-background-estimator"
+  escalation_template: "gate-templates/GATE_FAILURE.md"

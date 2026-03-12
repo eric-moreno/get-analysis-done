@@ -1,0 +1,36 @@
+wave: 7
+description: "Documentation"
+clear_context: true
+
+load_artifacts:
+  - path: "strategy/ANALYSIS_STRATEGY.md"
+    reason: "Strategy for final documentation context"
+  - path: "foundation/LITERATURE_REVIEW.md"
+    reason: "References for bibliography"
+  - path: "selection/CUTFLOW.md"
+    reason: "Selection details for final note"
+  - path: "selection/REGIONS.md"
+    reason: "Region definitions for final note"
+  - path: "background/BACKGROUND_YIELDS.md"
+    reason: "Background results for final note"
+  - path: "systematics/NP_RANKING.md"
+    reason: "Systematic impacts for final note"
+  - path: "fit/EXPECTED_LIMIT.md"
+    reason: "Expected results for final note"
+  - path: "results/OBSERVED_RESULTS.md"
+    reason: "Observed results for final note"
+  - path: "results/POST_FIT_DIAGNOSTICS.md"
+    reason: "Post-fit diagnostics for final note"
+  - path: "note/ANALYSIS_NOTE_DRAFT.md"
+    reason: "Draft note to finalize with observed results"
+  - path: "gate-results/gate-6-to-7-RESULT.json"
+    reason: "Gate result confirming results quality"
+
+agents:
+  - note-writer
+
+outputs:
+  - path: "note/ANALYSIS_NOTE_FINAL.md"
+    description: "Final analysis note with all results, tables, and figures"
+  - path: "note/SUPPLEMENTARY_MATERIAL.md"
+    description: "Supplementary material including additional distributions and checks"

@@ -1,0 +1,72 @@
+% =============================================================================
+% Section 7: Statistical Analysis
+% =============================================================================
+
+\section{Statistical Analysis}
+\label{sec:statistical}
+
+% AGENT: Fill from systematics fitter Wave 4 report
+% Document the statistical framework, likelihood construction, and fit methodology.
+
+\subsection{Likelihood Model}
+\label{sec:statistical:likelihood}
+
+% AGENT: Fill likelihood model description from WorkspaceBuilder output.
+% Include number of channels, bins, samples, and nuisance parameters.
+
+The statistical analysis is based on a binned profile likelihood ratio test.
+The likelihood function is constructed as:
+\begin{equation}
+  \mathcal{L}(\mu, \boldsymbol{\theta}) =
+  \prod_{c \in \text{channels}} \prod_{b \in \text{bins}}
+  \text{Pois}\!\left(n_{cb} \;\middle|\; \mu s_{cb}(\boldsymbol{\theta})
+  + \sum_p b_{pcb}(\boldsymbol{\theta})\right)
+  \cdot \prod_k p(\tilde{\theta}_k | \theta_k)
+\end{equation}
+where $\mu$ is the signal strength parameter, $\boldsymbol{\theta}$ are the
+nuisance parameters, and $p(\tilde{\theta}_k | \theta_k)$ are the constraint
+terms.
+
+% AGENT: Fill workspace structure details from pyhf workspace JSON.
+
+The \texttt{pyhf} HistFactory workspace contains:
+\begin{itemize}
+  \item Channels: [list channels]
+  \item Signal samples: [count]
+  \item Background samples: [count]
+  \item Systematic sources: [count] (after pruning)
+  \item Total bins: [count]
+\end{itemize}
+
+\subsection{Fit Methodology}
+\label{sec:statistical:fit}
+
+% AGENT: Fill fit configuration from Fitter settings.
+% Include test statistic, CL method, POI range, and convergence criteria.
+
+The test statistic $\tilde{q}_\mu$ is used for upper limit calculations,
+defined as:
+\begin{equation}
+  \tilde{q}_\mu = -2 \ln \frac{\mathcal{L}(\mu, \hat{\hat{\boldsymbol{\theta}}})}
+  {\mathcal{L}(\hat{\mu}, \hat{\boldsymbol{\theta}})}
+  \qquad \text{with } 0 \leq \hat{\mu} \leq \mu
+\end{equation}
+
+Upper limits are computed using the CL$_\text{s}$ method with asymptotic
+approximation. The signal strength parameter $\mu$ is scanned in the range
+$[0, \mu_\text{max}]$.
+
+\subsection{Expected Sensitivity}
+\label{sec:statistical:sensitivity}
+
+% AGENT: Fill expected sensitivity from SensitivityOptimizer results.
+% Include expected limit value, median and +/-1,2 sigma bands.
+
+The expected sensitivity is evaluated using an Asimov dataset (background-only
+hypothesis). The expected 95\% CL upper limit on the signal strength is:
+\begin{equation}
+  \mu_\text{exp}^{95} = [value] \quad
+  \left( [+1\sigma], [-1\sigma] \right)
+\end{equation}
+
+% AGENT: Fill interpretation in terms of cross-section if applicable.

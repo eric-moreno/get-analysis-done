@@ -1,0 +1,30 @@
+wave: 2
+description: "Event Selection"
+clear_context: true
+
+load_artifacts:
+  - path: "strategy/ANALYSIS_STRATEGY.md"
+    reason: "Strategy defines signal region cuts and MVA approach"
+  - path: "foundation/SAMPLE_INVENTORY.md"
+    reason: "Sample list for cutflow and training inputs"
+  - path: "foundation/OBJECT_DEFINITIONS.md"
+    reason: "Object definitions used in event selection"
+  - path: "foundation/LITERATURE_REVIEW.md"
+    reason: "Theory context for selection optimization"
+  - path: "gate-results/gate-1-to-2-RESULT.json"
+    reason: "Gate result confirming foundation completeness"
+
+agents:
+  - signal-lead
+  - ml-specialist
+  - background-estimator
+
+outputs:
+  - path: "selection/CUTFLOW.md"
+    description: "Event selection cutflow with yields at each stage"
+  - path: "selection/REGIONS.md"
+    description: "Signal and control region definitions"
+  - path: "selection/BDT_MODEL.md"
+    description: "BDT training configuration, features, and performance metrics"
+  - path: "gate-results/gate-2-to-3-RESULT.json"
+    description: "Gate evaluation result for Wave 2 to Wave 3 transition"

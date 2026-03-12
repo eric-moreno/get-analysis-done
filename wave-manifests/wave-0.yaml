@@ -1,0 +1,16 @@
+wave: 0
+description: "Strategy Generation"
+clear_context: true
+
+load_artifacts:
+  - path: "analysis.yaml"
+    reason: "Analysis configuration with signal region, dataset, and physics process definitions"
+
+agents:
+  - lead-analyst
+
+outputs:
+  - path: "strategy/ANALYSIS_STRATEGY.md"
+    description: "Complete analysis strategy document with signal/background definitions, selection approach, and systematic treatment plan"
+  - path: "gate-results/gate-0-to-1-RESULT.json"
+    description: "Gate evaluation result for Wave 0 to Wave 1 transition"
