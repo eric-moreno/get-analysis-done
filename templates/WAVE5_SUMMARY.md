@@ -81,7 +81,7 @@ checklist = bm._read_checklist()
 
 <!-- AGENT: Consolidate from cross-checker report. -->
 
-| mu_injected | mu_fitted | Pull (sigma) | Pass |
+| mu_injected | mu_hat | Pull (sigma) | Pass |
 |------------|-----------|-------------|------|
 | 0.5 | | | |
 | 1.0 | | | |

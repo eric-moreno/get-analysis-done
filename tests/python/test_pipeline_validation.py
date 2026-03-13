@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-# Project root: get-shit-done/
+# Project root: get-analysis-done/
 ROOT = Path(__file__).resolve().parent.parent.parent
 
 

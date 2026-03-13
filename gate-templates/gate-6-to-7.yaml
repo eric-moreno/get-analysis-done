@@ -19,6 +19,31 @@ criteria:
     threshold: "true"
     source: "wave-6/result-metrics.json"
     field: "post_fit_diagnostics_complete"
+  - metric: observed_limit_valid
+    operator: "=="
+    threshold: "true"
+    source: "wave-6/result-metrics.json"
+    field: "observed_limit_valid"
+  - metric: problems_classified
+    operator: "=="
+    threshold: "true"
+    source: "wave-6/result-metrics.json"
+    field: "problems_classified"
+  - metric: section_9_drafted
+    operator: "=="
+    threshold: "true"
+    source: "wave-6/result-metrics.json"
+    field: "section_9_drafted"
+  - metric: appendix_a_completed
+    operator: "=="
+    threshold: "true"
+    source: "wave-6/result-metrics.json"
+    field: "appendix_a_completed"
+  - metric: no_unresolved_category_b
+    operator: "=="
+    threshold: "true"
+    source: "wave-6/result-metrics.json"
+    field: "no_unresolved_category_b"
   - metric: result_summary_exists
     type: file_exists
     path: "wave-6/result_summary.md"

@@ -19,6 +19,16 @@ criteria:
     threshold: "pass"
     source: "wave-5/unblinding-metrics.json"
     field: "blinding_integrity"
+  - metric: note_sections_complete
+    operator: "=="
+    threshold: "true"
+    source: "wave-5/unblinding-metrics.json"
+    field: "note_sections_complete"
+  - metric: crosschecker_injection_agreement
+    operator: "=="
+    threshold: "true"
+    source: "wave-5/unblinding-metrics.json"
+    field: "crosschecker_injection_agreement"
   - metric: asimov_fit_exists
     type: file_exists
     path: "wave-5/asimov_fit.json"

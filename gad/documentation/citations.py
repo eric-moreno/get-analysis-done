@@ -1,6 +1,7 @@
 """Citation verification via INSPIRE-HEP REST API."""
 
 import logging
+import re
 from pathlib import Path
 
 import requests
@@ -103,13 +104,50 @@ def verify_bibliography(bib_entries: list) -> dict:
     }
 
 
+def collect_citations_from_bib(bib_path: str) -> list:
+    """Parse BibTeX file and extract citation entries for verification.
+
+    Parameters
+    ----------
+    bib_path : str
+        Path to .bib file.
+
+    Returns
+    -------
+    list[dict]
+        List of citation dicts with cite_key and optional doi, eprint, title, url fields.
+    """
+    path = Path(bib_path)
+    if not path.exists():
+        logger.warning("BibTeX file not found: %s", bib_path)
+        return []
+
+    content = path.read_text()
+    entries = []
+    for match in re.finditer(r'@\w+\{([^,]+),\s*(.*?)\n\}', content, re.DOTALL):
+        key = match.group(1).strip()
+        body = match.group(2)
+        entry = {"cite_key": key}
+        for field_match in re.finditer(
+            r'(\w+)\s*=\s*\{(?:\{([^}]*)\}|([^}]*))\}', body
+        ):
+            field_name = field_match.group(1).lower()
+            field_value = (field_match.group(2) or field_match.group(3) or "").strip()
+            if field_name in ("doi", "eprint", "title", "url"):
+                entry[field_name] = field_value
+        entries.append(entry)
+    return entries
+
+
 def collect_citations_from_yaml(yaml_path: str) -> list:
-    """Read citation entries from a references YAML file.
+    """Read citation entries from a references YAML or BibTeX file.
+
+    If the file has a .bib extension, delegates to collect_citations_from_bib().
 
     Parameters
     ----------
     yaml_path : str
-        Path to references.yaml file.
+        Path to references YAML or BibTeX file.
 
     Returns
     -------
@@ -120,6 +158,9 @@ def collect_citations_from_yaml(yaml_path: str) -> list:
     if not path.exists():
         logger.warning("References file not found: %s", yaml_path)
         return []
+
+    if path.suffix == ".bib":
+        return collect_citations_from_bib(str(path))
 
     with open(path) as fh:
         data = yaml.safe_load(fh)

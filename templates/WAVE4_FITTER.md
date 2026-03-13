@@ -18,13 +18,14 @@ wave: 4
 from gad.statistical import WorkspaceBuilder
 
 builder = WorkspaceBuilder()
-builder.add_channel("SR", observations=obs_sr,
-                    samples={"signal": sig_template, "qqbar": qqbar_template, ...})
-builder.add_channel("CR_qqbar", observations=obs_cr, samples={...})
-# Add modifiers from systematic evaluation
-for modifier in kept_modifiers:
-    builder.add_modifier(modifier["name"], modifier["type"], modifier["data"],
-                         channels=modifier.get("channels"), samples=modifier.get("samples"))
+builder.add_channel("SR", observed=obs_sr)
+builder.add_sample("SR", "signal", sig_template, modifiers=[...])
+builder.add_sample("SR", "qqbar", qqbar_template, modifiers=[...])
+builder.add_channel("CR_qqbar", observed=obs_cr)
+builder.add_sample("CR_qqbar", "qqbar", qqbar_cr_template, modifiers=[...])
+# Add additional modifiers individually (channel_name, sample_name, modifier_dict)
+for modifier in extra_modifiers:
+    builder.add_modifier(modifier["channel"], modifier["sample"], modifier)
 workspace = builder.build()
 ```
 
@@ -41,13 +42,13 @@ workspace = builder.build()
 
 ```python
 validation = builder.validate_asimov(workspace)
-# validation: {"converged": bool, "max_np_pull": float, "mu_hat": float}
+# validation: {"valid": bool, "pulls": dict, "max_pull": float, "fit_results": FitResults}
 ```
 
 | Check | Requirement | Value | Status |
 |-------|-------------|-------|--------|
-| Asimov fit converges | Converged = True | | |
-| Max NP pull (Asimov) | < 0.5 sigma | | |
+| Asimov fit valid | valid = True | | |
+| Max NP pull (Asimov) | max_pull < 0.5 sigma | | |
 | Signal strength mu_hat | ~0.0 (bkg-only) | | |
 | Negative bin yields | All >= 1e-6 | | |
 
@@ -62,7 +63,7 @@ from gad.statistical import Fitter
 
 fitter = Fitter(workspace)
 limit = fitter.expected_limit()
-# limit: {"observed": None, "minus2": float, "minus1": float, "median": float, "plus1": float, "plus2": float}
+# limit: {"observed_limit": None, "expected_limit": float, "bands": {"-2": float, "-1": float, "+1": float, "+2": float}}
 ```
 
 | Band | Expected Limit (mu) |
@@ -86,7 +87,9 @@ limit = fitter.expected_limit()
 ```python
 from gad.statistical import Diagnostics
 
-diag = Diagnostics(workspace)
+diag = Diagnostics(workspace, output_dir="analysis/wave4/statmodel/fit_diagnostics", experiment_style="ATLAS")
+# Obtain fit_results first (required by most diagnostic methods)
+fit_results = Fitter(workspace).fit(asimov=True)
 diagnostics = diag.run_all_diagnostics()
 # Includes: pull_plot, ranking_plot, correlation_matrix, gof_test, likelihood_scan
 ```
@@ -130,14 +133,14 @@ diagnostics = diag.run_all_diagnostics()
 
 ```python
 gof = diag.gof_test()
-# gof: {"test_statistic": float, "p_value": float, "ndf": int}
+# gof: {"gof_stat": float, "p_value": float, "saturated": bool}
 ```
 
 | Metric | Value | Requirement | Status |
 |--------|-------|-------------|--------|
-| GoF test statistic | | | |
+| GoF statistic (gof_stat) | | | |
 | GoF p-value | | > 0.05 | |
-| Degrees of freedom | | | |
+| Saturated model | | | |
 
 ### Diagnostic Plots
 
@@ -150,7 +153,9 @@ gof = diag.gof_test()
 ### Top 5 NP Constraints
 
 ```python
-constraints = diag.constraint_analysis(top_n=5)
+# Requires fit_results and ranking_results from earlier diagnostic calls
+ranking_results, ranking_path = diag.ranking_plot(fit_results=fit_results)
+constraints = diag.constraint_analysis(fit_results, ranking_results, top_n=5)
 ```
 
 | Rank | NP Name | Pre-fit Unc | Post-fit Unc | Constraint Factor | Impact on mu |
@@ -176,8 +181,8 @@ constraints = diag.constraint_analysis(top_n=5)
 ```python
 from gad.statistical import DatacardExporter
 
-exporter = DatacardExporter(workspace)
-exporter.export(output_dir="analysis/wave4/statmodel/combine_datacards/")
+exporter = DatacardExporter()
+exporter.export(workspace_spec=workspace, output_dir="analysis/wave4/statmodel/combine_datacards/")
 ```
 
 | Property | Value |
@@ -197,11 +202,11 @@ exporter.export(output_dir="analysis/wave4/statmodel/combine_datacards/")
 from gad.statistical import SensitivityOptimizer
 
 optimizer = SensitivityOptimizer()
-comparison = optimizer.compare_configurations([
-    {"name": "baseline", "workspace": ws_baseline},
-    {"name": "coarser_binning", "workspace": ws_coarse},
-    {"name": "aggressive_pruning", "workspace": ws_pruned},
-])
+comparison = optimizer.compare_configurations({
+    "baseline": ws_baseline,
+    "coarser_binning": ws_coarse,
+    "aggressive_pruning": ws_pruned,
+})
 ```
 
 | Configuration | Expected Limit (median) | NPs | Channels | Notes |

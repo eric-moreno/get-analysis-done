@@ -3,13 +3,13 @@ description: "Background Validation"
 clear_context: true
 
 load_artifacts:
-  - path: "strategy/ANALYSIS_STRATEGY.md"
+  - path: "analysis/wave0/ANALYSIS_STRATEGY.md"
     reason: "Strategy defines background estimation methods"
-  - path: "selection/CUTFLOW.md"
+  - path: "analysis/wave2/selection/CUTFLOW.md"
     reason: "Cutflow provides yield inputs for background estimation"
-  - path: "selection/REGIONS.md"
+  - path: "analysis/wave2/selection/REGIONS.md"
     reason: "CR and VR definitions for background validation"
-  - path: "selection/BDT_MODEL.md"
+  - path: "analysis/wave2/mva/BDT_MODEL.md"
     reason: "BDT output distribution shapes for templates"
   - path: "gate-results/gate-2-to-3-RESULT.json"
     reason: "Gate result confirming selection quality"
@@ -19,11 +19,11 @@ agents:
   - cross-checker
 
 outputs:
-  - path: "background/BACKGROUND_YIELDS.md"
+  - path: "analysis/wave3/BACKGROUND_YIELDS.md"
     description: "Background yield estimates per region with uncertainties"
-  - path: "background/CLOSURE_TESTS.md"
+  - path: "analysis/wave3/CLOSURE_TESTS.md"
     description: "Closure test results in validation regions"
-  - path: "background/CROSS_CHECK.md"
+  - path: "analysis/wave3/crosscheck/CROSS_CHECK.md"
     description: "Independent cross-check of background estimates"
   - path: "gate-results/gate-3-to-4-RESULT.json"
     description: "Gate evaluation result for Wave 3 to Wave 4 transition"

@@ -110,11 +110,12 @@ from gad.statistical.workspace import WorkspaceBuilder
 from gad.blinding.module import BlindingManager
 
 # --- Signal Injection Tests ---
+# Workspace path follows WAVE4_FITTER convention (analysis/wave4/statmodel/)
 spec = WorkspaceBuilder.load("analysis/wave4/statmodel/workspace.json")
 tester = SignalInjectionTester(spec)
 injection_results = tester.run_all(mu_values=(0.5, 1.0, 2.0))
 # injection_results: {
-#   "tests": [{"mu_injected": float, "mu_fitted": float, "pull": float, "converged": bool}, ...],
+#   "tests": [{"mu_injected": float, "mu_hat": float, "pull": float, "converged": bool}, ...],
 #   "all_pass": bool  # True if all |pull| < 1.0
 # }
 
@@ -164,18 +165,18 @@ from gad.statistical.fitter import Fitter
 import json
 
 # Independent computation (DO NOT read primary results first)
+# Workspace path follows WAVE4_FITTER convention (analysis/wave4/statmodel/)
 spec = WorkspaceBuilder.load("analysis/wave4/statmodel/workspace.json")
 fitter = Fitter(spec)
 xcheck_results = fitter.observed_limit()
-xcheck_fit = fitter.fit(asimov=False)
 
 # NOW compare with primary
 primary_results = json.load(open("analysis/wave6/results/observed_limit.json"))
 rel_diff = abs(xcheck_results["observed_limit"] - primary_results["observed_limit"]) / primary_results["observed_limit"]
 assert rel_diff < 0.01, f"Limit disagreement: {rel_diff:.4f}"
 
-# Compare mu_hat
-mu_hat_pull = abs(xcheck_fit["mu_hat"] - primary_results["mu_hat"]) / xcheck_fit.get("mu_hat_error", 1.0)
+# Compare mu_hat (both from observed_limit() dicts)
+mu_hat_pull = abs(xcheck_results["mu_hat"] - primary_results["mu_hat"]) / primary_results.get("mu_hat_error", 1.0)
 assert mu_hat_pull < 0.5, f"mu_hat pull: {mu_hat_pull:.2f}"
 ```
 
@@ -206,78 +207,18 @@ In Wave 7, you independently verify every BibTeX entry in references.bib exists 
 
 ### Module Usage
 
-Verify each BibTeX entry via DOI, arXiv ID, or INSPIRE record number:
-
 ```python
-import requests
-import re
-from pathlib import Path
+from gad.documentation.citations import verify_citation, verify_bibliography, collect_citations_from_yaml
 
-def verify_citation(entry):
-    """Verify a BibTeX entry exists via INSPIRE-HEP API.
+# Parse BibTeX file and verify each entry via INSPIRE-HEP API
+# verify_citation uses 3-tier lookup: DOI -> arXiv -> INSPIRE record
+bib_entries = collect_citations_from_yaml("analysis/wave7/note/references.bib")
 
-    Returns dict with verified (bool), method (str), details (str).
-    """
-    # Try DOI lookup first (preferred method)
-    if entry.get("doi"):
-        resp = requests.get(
-            f"https://inspirehep.net/api/doi/{entry['doi']}",
-            timeout=10
-        )
-        if resp.status_code == 200:
-            return {"verified": True, "method": "DOI", "details": entry["doi"]}
+result = verify_bibliography(bib_entries)
+# result: {"total": int, "verified_count": int, "failed_count": int, "verified": list, "failed": list}
 
-    # Try arXiv lookup (secondary)
-    if entry.get("eprint"):
-        resp = requests.get(
-            f"https://inspirehep.net/api/arxiv/{entry['eprint']}",
-            timeout=10
-        )
-        if resp.status_code == 200:
-            return {"verified": True, "method": "arXiv", "details": entry["eprint"]}
-
-    # Try INSPIRE record number (tertiary)
-    if entry.get("url") and "inspirehep.net" in entry["url"]:
-        record_id = entry["url"].rstrip("/").split("/")[-1]
-        resp = requests.get(
-            f"https://inspirehep.net/api/literature/{record_id}",
-            timeout=10
-        )
-        if resp.status_code == 200:
-            return {"verified": True, "method": "INSPIRE", "details": record_id}
-
-    return {"verified": False, "method": "none", "details": "Could not verify"}
-
-
-def parse_bib_entries(bib_path):
-    """Parse BibTeX file into list of entry dicts."""
-    content = Path(bib_path).read_text()
-    entries = []
-    # Split on @article, @techreport, @inproceedings, etc.
-    for match in re.finditer(r'@\w+\{([^,]+),\s*(.*?)\n\}', content, re.DOTALL):
-        key = match.group(1).strip()
-        body = match.group(2)
-        entry = {"key": key}
-        for field_match in re.finditer(r'(\w+)\s*=\s*["{](.+?)["}]', body):
-            entry[field_match.group(1).lower()] = field_match.group(2)
-        entries.append(entry)
-    return entries
-
-
-# Run verification on all entries
-entries = parse_bib_entries("analysis/wave7/note/references.bib")
-results = []
-for entry in entries:
-    result = verify_citation(entry)
-    result["key"] = entry["key"]
-    results.append(result)
-
-verified = [r for r in results if r["verified"]]
-failed = [r for r in results if not r["verified"]]
-
-print(f"Total: {len(results)}, Verified: {len(verified)}, Failed: {len(failed)}")
-for f in failed:
-    print(f"  UNVERIFIED: {f['key']} -- {f['details']}")
+# Report: all entries must be verified (no ghost citations)
+assert result["failed_count"] == 0, f"Unverified citations: {result['failed']}"
 ```
 
 ### CRITICAL Notes

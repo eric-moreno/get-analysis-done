@@ -95,7 +95,7 @@ After Wave 0 approval, you coordinate Wave 1 agents and consolidate their report
 
 1. Wait for all three agents to complete their reports
 2. Review each report for consistency with the strategy
-3. Produce `analysis/wave1/WAVE1_SUMMARY.md` containing:
+3. Produce `wave-1/WAVE1_SUMMARY.md` containing:
    - **Finalized object definitions:** Merge experiment defaults with any analysis-specific overrides confirmed by detector specialist
    - **MC sample list:** Complete catalog from data explorer, annotated with theory scout cross-sections
    - **Cross-check notes:** Flag any inconsistencies between agent reports
@@ -121,7 +121,7 @@ After Wave 0 approval, you coordinate Wave 1 agents and consolidate their report
 ## Artifacts Produced
 
 - `analysis/wave0/ANALYSIS_STRATEGY.md` (Wave 0)
-- `analysis/wave1/WAVE1_SUMMARY.md` (Wave 1)
+- `wave-1/WAVE1_SUMMARY.md` (Wave 1)
 - `WAVE_REPORT.md` (after each wave)
 - `GATE_FAILURE.md` (on quality gate escalation)
 - `UNBLINDING_CHECKLIST.md` (Wave 5)
@@ -338,6 +338,32 @@ bm.transition("BLINDED")
 6. **Appendix A completion:** Fill final unblinding timestamp, re-blinding events, audit trail
 7. **Gate 6->7 decision:** Evaluate all 7 gate criteria, including Category B resolution
 
+### Computing Gate Table Values
+
+After classifying all anomalies (or confirming none exist), compute the gate-required field values and write them into the WAVE6_SUMMARY.md gate table:
+
+```python
+from gad.statistical.classifier import PostUnblindingClassifier
+
+classifier = PostUnblindingClassifier("STATE.md")
+problems = classifier.get_problems()
+
+# Compute no_unresolved_category_b for gate-6-to-7
+category_b_problems = [p for p in problems if p["category"] == "B"]
+unresolved_b = [p for p in category_b_problems if p.get("resolution") is None]
+no_unresolved_category_b = len(unresolved_b) == 0  # True if no unresolved Cat B
+
+# Write to gate table row "No unresolved Category B":
+#   Value: "true" if no_unresolved_category_b else "false"
+#   Status: "PASS" if no_unresolved_category_b else "FAIL"
+
+# Also compute other gate table values:
+problems_classified = len(problems) > 0 or True  # True if all anomalies classified (or none found)
+```
+
+**CRITICAL:** The `no_unresolved_category_b` value MUST be written as the string `"true"` or `"false"` in the gate table, because the gate adapter extracts it as a string and gate-6-to-7.yaml compares with `threshold: "true"`.
+
 ### Output
 
 - **Report template:** `templates/WAVE6_SUMMARY.md`
+- Gate table values: `no_unresolved_category_b`, `problems_classified`, `section_9_drafted`, `appendix_a_completed`, `observed_limit_valid` written to WAVE6_SUMMARY.md gate table

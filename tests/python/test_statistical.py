@@ -544,3 +544,13 @@ class TestFitterObserved:
     def test_observed_limit_uses_real_data(self, fitter):
         result = fitter.observed_limit()
         assert result["observed_limit"] is not None
+
+    def test_observed_limit_has_mu_hat(self, fitter):
+        result = fitter.observed_limit()
+        assert "mu_hat" in result
+
+    def test_observed_limit_mu_hat_is_finite(self, fitter):
+        import math
+        result = fitter.observed_limit()
+        assert isinstance(result["mu_hat"], float)
+        assert math.isfinite(result["mu_hat"])

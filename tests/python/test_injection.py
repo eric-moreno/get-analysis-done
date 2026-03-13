@@ -75,3 +75,19 @@ class TestSignalInjectionTester:
     def test_pull_is_less_than_1_for_valid_injection(self, tester):
         result = tester.test_injection(1.0)
         assert result["pull"] < 1.0
+
+    # -- recovery_rate tests ---------------------------------------------------
+
+    def test_run_all_returns_recovery_rate(self, tester):
+        result = tester.run_all()
+        assert "recovery_rate" in result, "Missing key: recovery_rate"
+        assert isinstance(result["recovery_rate"], float)
+
+    def test_recovery_rate_is_1_when_all_pass(self, tester):
+        result = tester.run_all()
+        assert result["all_pass"] is True
+        assert result["recovery_rate"] == 1.0
+
+    def test_recovery_rate_between_0_and_1(self, tester):
+        result = tester.run_all()
+        assert 0.0 <= result["recovery_rate"] <= 1.0

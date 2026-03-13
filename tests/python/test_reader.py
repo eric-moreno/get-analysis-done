@@ -102,6 +102,10 @@ class TestDataReaderFactory:
         reader = create_reader(mock_root_file)
         assert reader._raw_path == mock_root_file
 
+    def test_importable_from_package(self):
+        from gad.data import create_reader
+        assert callable(create_reader)
+
 
 class TestDataReaderBranches:
     """DataReader.scan_branches returns branch metadata."""

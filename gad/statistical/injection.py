@@ -75,10 +75,13 @@ class SignalInjectionTester:
         Returns
         -------
         dict
-            Keys: tests (list of result dicts), all_pass (bool).
+            Keys: tests (list of result dicts), all_pass (bool),
+            recovery_rate (float between 0.0 and 1.0).
         """
         tests = [self.test_injection(mu) for mu in mu_values]
+        passing = sum(1 for t in tests if t["passes"])
         return {
             "tests": tests,
             "all_pass": all(t["passes"] for t in tests),
+            "recovery_rate": passing / len(tests) if tests else 0.0,
         }

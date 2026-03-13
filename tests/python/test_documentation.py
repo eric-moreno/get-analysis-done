@@ -86,6 +86,51 @@ class TestVerifyBibliography:
         assert result["verified_count"] == 0
 
 
+class TestCollectCitationsFromBib:
+    """Tests for collect_citations_from_bib BibTeX parser."""
+
+    def test_parses_bibtex_entries(self, tmp_path):
+        from gad.documentation.citations import collect_citations_from_bib
+
+        bib = tmp_path / "refs.bib"
+        bib.write_text(textwrap.dedent("""\
+            @article{Smith2023,
+              author = {Smith, J.},
+              title = {Test Paper},
+              doi = {10.1234/test},
+              eprint = {2301.12345},
+            }
+
+            @inproceedings{Jones2024,
+              author = {Jones, A.},
+              title = {Another Paper},
+              url = {https://example.com},
+            }
+        """))
+        result = collect_citations_from_bib(str(bib))
+        assert len(result) == 2
+        assert result[0]["cite_key"] == "Smith2023"
+        assert result[0]["doi"] == "10.1234/test"
+        assert result[0]["eprint"] == "2301.12345"
+        assert result[1]["cite_key"] == "Jones2024"
+        assert result[1]["url"] == "https://example.com"
+
+    def test_handles_nested_braces(self, tmp_path):
+        from gad.documentation.citations import collect_citations_from_bib
+
+        bib = tmp_path / "refs.bib"
+        bib.write_text('@article{Key1,\n  title = {{Nested Title}},\n}\n')
+        result = collect_citations_from_bib(str(bib))
+        assert len(result) == 1
+        assert "title" in result[0]
+
+    def test_nonexistent_file_returns_empty(self):
+        from gad.documentation.citations import collect_citations_from_bib
+
+        result = collect_citations_from_bib("/nonexistent/path.bib")
+        assert result == []
+
+
 class TestCollectCitationsFromYaml:
     """Tests for collect_citations_from_yaml."""
 
@@ -105,6 +150,15 @@ class TestCollectCitationsFromYaml:
         result = collect_citations_from_yaml(str(yaml_file))
         assert len(result) == 2
         assert result[0]["doi"] == "10.1234/test"
+
+    def test_bib_file_autodetect(self, tmp_path):
+        from gad.documentation.citations import collect_citations_from_yaml
+
+        bib = tmp_path / "refs.bib"
+        bib.write_text('@article{Key1,\n  title = {Test},\n  doi = {10.1/x},\n}\n')
+        result = collect_citations_from_yaml(str(bib))
+        assert len(result) == 1
+        assert result[0]["cite_key"] == "Key1"
 
 
 # ---------------------------------------------------------------------------

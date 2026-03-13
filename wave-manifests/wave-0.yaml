@@ -10,7 +10,7 @@ agents:
   - lead-analyst
 
 outputs:
-  - path: "strategy/ANALYSIS_STRATEGY.md"
+  - path: "analysis/wave0/ANALYSIS_STRATEGY.md"
     description: "Complete analysis strategy document with signal/background definitions, selection approach, and systematic treatment plan"
   - path: "gate-results/gate-0-to-1-RESULT.json"
     description: "Gate evaluation result for Wave 0 to Wave 1 transition"

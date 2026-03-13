@@ -44,10 +44,9 @@ fitter = Fitter(spec)
 obs_results = fitter.observed_limit()
 # obs_results: {
 #   "observed_limit": float,
-#   "expected_limit": {"minus2": float, "minus1": float, "median": float, "plus1": float, "plus2": float},
-#   "CLs_values": [...],
-#   "mu_hat": float,
-#   "converged": bool
+#   "expected_limit": float (median expected),
+#   "bands": {"-2": float, "-1": float, "+1": float, "+2": float},
+#   "mu_hat": float (best-fit signal strength from MLE),
 # }
 ```
 
@@ -83,14 +82,14 @@ obs_results = fitter.observed_limit()
 ```python
 from gad.statistical.diagnostics import Diagnostics
 
-diag = Diagnostics(spec, output_dir="analysis/wave6/diagnostics")
+diag = Diagnostics(spec, output_dir="analysis/wave6/diagnostics", experiment_style="ATLAS")
 fit_results = fitter.fit(asimov=False)
 
 # Post-fit diagnostic plots
 diag.pull_plot(fit_results)
-diag.ranking_plot(fit_results)
+ranking_results, ranking_path = diag.ranking_plot(fit_results=fit_results)
 diag.correlation_matrix(fit_results)
-diag.likelihood_scan("mu")
+scan_results, scan_path = diag.likelihood_scan(par_name="mu")
 diag.gof_test()
 ```
 

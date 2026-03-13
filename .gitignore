@@ -27,6 +27,5 @@ venv/
 analysis/
 workspace/
 
-# Claude Code local config
-CLAUDE.md
+# Claude Code local state (user-specific)
 .planning/

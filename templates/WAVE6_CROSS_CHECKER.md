@@ -35,7 +35,6 @@ fitter = Fitter(spec)
 
 # Compute observed limit independently
 xcheck_results = fitter.observed_limit()
-xcheck_fit = fitter.fit(asimov=False)
 
 # NOW compare with primary results
 primary_results = json.load(open("analysis/wave6/results/observed_limit.json"))

@@ -99,17 +99,15 @@ After updating abstract and introduction, verify all quoted values match:
 ### Plotting Setup
 
 ```python
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-try:
-    import mplhep
-    style = getattr(mplhep.style, experiment_style, None)
-    if style is not None:
-        plt.style.use(style)
-except (ImportError, AttributeError):
-    pass
+from gad.documentation.plots import setup_experiment_style, regenerate_all_plots
+
+# Apply experiment-specific mplhep style
+setup_experiment_style(experiment_style)
 # Save all figures as PDF: fig.savefig("figures/plot_name.pdf", bbox_inches="tight")
+
+# After regenerating all plots:
+result = regenerate_all_plots(plot_config)
+# result: {"total": int, "generated": int, "failed": list}
 ```
 
 ### Required Plots
@@ -176,27 +174,14 @@ Compare observed results to previously published results:
 ### Citation Collection
 
 ```python
-import re
-from pathlib import Path
+from gad.documentation.citations import verify_citation, verify_bibliography, collect_citations_from_yaml
 
-# Collect all citations from wave reports
-all_citations = []
+# Collect citations from experiment references
+bib_entries = collect_citations_from_yaml(f"experiments/{experiment}/references.yaml")
 
-# 1. Theory scout literature review
-lit_review = Path("analysis/wave1/LITERATURE_REVIEW.md").read_text()
-# Extract reference entries (DOIs, arXiv IDs, INSPIRE URLs)
-
-# 2. Experiment context references
-import yaml
-refs_yaml = yaml.safe_load(Path("experiments/{experiment}/references.yaml").read_text())
-for ref in refs_yaml.get("references", []):
-    all_citations.append(ref)
-
-# 3. Published results used in comparison
-# Extract from comparison section sources
-
-# 4. Analysis methodology references (CLs, HistFactory, pyhf)
-# Standard HEP methodology citations
+# Verify all bibliography entries
+result = verify_bibliography(bib_entries)
+# result: {"total": int, "verified_count": int, "failed_count": int, "verified": list, "failed": list}
 ```
 
 ### BibTeX File Generation
@@ -235,46 +220,10 @@ After bibliography generation, the cross-checker agent independently verifies ev
 ### Self-Containedness Verification
 
 ```python
-import re
-from pathlib import Path
-
-def verify_self_contained(note_dir):
-    """Check that the analysis note is self-contained."""
-    checks = []
-    note_dir = Path(note_dir)
-
-    # Check all figures referenced exist
-    for tex_file in note_dir.glob("*.tex"):
-        content = tex_file.read_text()
-        figs = re.findall(r'\\includegraphics.*?\{(.+?)\}', content)
-        for fig in figs:
-            fig_path = note_dir / fig
-            if not fig_path.exists():
-                fig_path = note_dir / "figures" / fig
-            checks.append({
-                "check": f"Figure exists: {fig}",
-                "passes": fig_path.exists()
-            })
-
-    # Check no unfilled AGENT directive placeholders
-    for tex_file in note_dir.glob("*.tex"):
-        content = tex_file.read_text()
-        placeholders = re.findall(r'% AGENT:.*\[(?:value|PASS/FAIL|count|yes/no)\]', content)
-        checks.append({
-            "check": f"No unfilled placeholders in {tex_file.name}",
-            "passes": len(placeholders) == 0
-        })
-
-    # Check bibliography exists
-    bib_path = note_dir / "references.bib"
-    checks.append({
-        "check": "Bibliography file exists",
-        "passes": bib_path.exists()
-    })
-
-    return checks
+from gad.documentation.verification import verify_self_contained, generate_verification_report
 
 checks = verify_self_contained("analysis/wave7/note")
+report = generate_verification_report(checks)
 for c in checks:
     status = "PASS" if c["passes"] else "FAIL"
     print(f"[{status}] {c['check']}")
@@ -287,59 +236,14 @@ for c in checks:
 ### Compilation Sequence
 
 ```python
-import subprocess
-from pathlib import Path
+from gad.documentation.compiler import compile_note, check_undefined_references
 
-def compile_note(tex_dir, main_file="main.tex"):
-    """Compile LaTeX note with bibliography.
-
-    Runs: pdflatex -> bibtex -> pdflatex -> pdflatex
-    Returns dict with success (bool), pdf_path (str), errors (list).
-    """
-    base = Path(main_file).stem
-    results = {"success": False, "pdf_path": None, "errors": []}
-
-    commands = [
-        ["pdflatex", "-interaction=nonstopmode", main_file],
-        ["bibtex", base],
-        ["pdflatex", "-interaction=nonstopmode", main_file],
-        ["pdflatex", "-interaction=nonstopmode", main_file],
-    ]
-
-    for cmd in commands:
-        try:
-            proc = subprocess.run(
-                cmd, cwd=tex_dir, capture_output=True,
-                text=True, timeout=120, check=False
-            )
-        except subprocess.TimeoutExpired:
-            results["errors"].append(f"Timeout: {' '.join(cmd)}")
-            return results
-
-    # Verify PDF exists
-    pdf_path = Path(tex_dir) / f"{base}.pdf"
-    if pdf_path.exists():
-        results["success"] = True
-        results["pdf_path"] = str(pdf_path)
-    else:
-        results["errors"].append("PDF not generated")
-
-    # Check for undefined references in log
-    log_path = Path(tex_dir) / f"{base}.log"
-    if log_path.exists():
-        log_content = log_path.read_text()
-        undef_refs = re.findall(r"LaTeX Warning: Reference .* undefined", log_content)
-        undef_cites = re.findall(r"LaTeX Warning: Citation .* undefined", log_content)
-        if undef_refs:
-            results["errors"].append(f"Undefined references: {len(undef_refs)}")
-        if undef_cites:
-            results["errors"].append(f"Undefined citations: {len(undef_cites)}")
-
-    return results
-
-result = compile_note("analysis/wave7/note")
+result = compile_note("analysis/wave7/note", main_file="main.tex")
+# result: {"success": bool, "pdf_path": str or None, "errors": list, "warnings": list}
 assert result["success"], f"Compilation failed: {result['errors']}"
-print(f"PDF generated: {result['pdf_path']}")
+
+undefined = check_undefined_references("analysis/wave7/note")
+assert len(undefined) == 0, f"Undefined references: {undefined}"
 ```
 
 ### Post-Compilation Verification

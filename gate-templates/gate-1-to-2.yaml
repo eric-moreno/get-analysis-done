@@ -5,25 +5,30 @@ gate: "Wave 1 -> Wave 2"
 description: "Sample inventory completeness and object definition coverage"
 criteria:
   - metric: sample_inventory_completeness
-    operator: ">="
-    threshold: 1.0
+    operator: "=="
+    threshold: true
     source: "wave-1/exploration-metrics.json"
     field: "sample_inventory_completeness"
   - metric: object_definition_coverage
-    operator: ">="
-    threshold: 1.0
+    operator: "=="
+    threshold: true
     source: "wave-1/exploration-metrics.json"
     field: "object_definition_coverage"
   - metric: literature_review_completeness
-    operator: ">="
-    threshold: 0.80
+    operator: "=="
+    threshold: true
     source: "wave-1/exploration-metrics.json"
     field: "literature_review_completeness"
-  - metric: data_mc_agreement_check
+  - metric: data_quality_acceptable
     operator: "=="
-    threshold: "pass"
+    threshold: true
     source: "wave-1/exploration-metrics.json"
-    field: "data_mc_agreement"
+    field: "data_quality_acceptable"
+  - metric: luminosity_validated
+    operator: "=="
+    threshold: true
+    source: "wave-1/exploration-metrics.json"
+    field: "luminosity_validated"
 on_failure:
   max_retries: 2
   diagnosis_agent: "gad-data-explorer"

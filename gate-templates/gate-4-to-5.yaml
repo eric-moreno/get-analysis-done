@@ -17,6 +17,26 @@ criteria:
     threshold: "pass"
     source: "wave-4/fit-results.json"
     field: "fit_convergence"
+  - metric: gof_pvalue
+    operator: ">="
+    threshold: 0.05
+    source: "wave-4/fit-results.json"
+    field: "gof_pvalue"
+  - metric: constraint_analysis_complete
+    operator: "=="
+    threshold: "pass"
+    source: "wave-4/fit-results.json"
+    field: "constraint_analysis_complete"
+  - metric: combine_export_complete
+    operator: "=="
+    threshold: "pass"
+    source: "wave-4/fit-results.json"
+    field: "combine_export_complete"
+  - metric: sensitivity_review_complete
+    operator: "=="
+    threshold: "pass"
+    source: "wave-4/fit-results.json"
+    field: "sensitivity_review_complete"
   - metric: ranking_plot_exists
     type: file_exists
     path: "wave-4/np_ranking.json"

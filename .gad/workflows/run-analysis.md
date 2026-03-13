@@ -57,7 +57,7 @@ If START_WAVE == 0:
 
    Wave 0 complete. The analysis strategy has been generated.
 
-   **Review:** strategy/ANALYSIS_STRATEGY.md
+   **Review:** analysis/wave0/ANALYSIS_STRATEGY.md
    **Gate result:** gate-0-to-1 {pass/fail}
 
    Please review the strategy and respond:
@@ -69,7 +69,7 @@ If START_WAVE == 0:
 
 5. After approval, increment current_wave to 1:
    ```bash
-   node "$HOME/.claude/get-analysis-done/bin/gad-tools.cjs" state set current_wave 1
+   node "$HOME/.claude/get-analysis-done/bin/gad-tools.cjs" state update current_wave 1
    ```
 </step>
 
@@ -111,7 +111,39 @@ For each wave N from max(START_WAVE, 1) to 7:
    )
    ```
 
-4. **Evaluate gate (if not the last wave):**
+4. **Extract gate metrics via gate adapter:**
+
+   After wave N agents complete and their outputs are committed, extract structured
+   metrics from the markdown summary into JSON source files that `evaluateGate` reads:
+
+   a. Identify the wave summary markdown file at the canonical path `wave-{N}/WAVE{N}_SUMMARY.md` (e.g., `wave-1/WAVE1_SUMMARY.md`, `wave-6/WAVE6_SUMMARY.md`). This is produced by the lead analyst agent using the corresponding template from `templates/WAVE{N}_SUMMARY.md`.
+   b. Determine the gate ID for the transition: `gate-{N}-to-{N+1}`
+   c. Run the gate adapter to extract metrics from markdown and write JSON source files:
+
+   ```javascript
+   const adapter = require('./bin/lib/gate-adapter.cjs');
+   var result = adapter.extractAndWriteGateMetrics(cwd, gateId, summaryPath);
+   if (result.error) {
+     // Log warning — evaluateGate will report specific missing sources
+     console.error('Gate adapter: ' + result.error);
+   }
+   if (result.warnings.length > 0) {
+     result.warnings.forEach(function(w) { console.warn('Gate adapter: ' + w); });
+   }
+   ```
+
+   d. For gates requiring cross-checker data (e.g., `gate-3-to-4` with cross-check
+      metrics), call the adapter a second time with the cross-checker report path:
+      ```javascript
+      adapter.extractAndWriteGateMetrics(cwd, gateId, crossCheckerReportPath);
+      ```
+      The adapter merges extracted metrics into the same JSON source files, so both
+      main summary metrics and cross-checker metrics are available for gate evaluation.
+
+   e. Proceed to gate evaluation (step 5) which will find the JSON source files
+      written by the adapter.
+
+5. **Evaluate gate (if not the last wave):**
    Load `gate-templates/gate-{N}-to-{N+1}.yaml` and evaluate using evaluateGate.
 
    If gate fails:
@@ -123,15 +155,15 @@ For each wave N from max(START_WAVE, 1) to 7:
    - Commit wave artifacts atomically via commitWaveArtifacts
    - Increment current_wave:
      ```bash
-     node "$HOME/.claude/get-analysis-done/bin/gad-tools.cjs" state set current_wave {N+1}
+     node "$HOME/.claude/get-analysis-done/bin/gad-tools.cjs" state update current_wave {N+1}
      ```
 
-5. **Check for mandatory pause (unblinding transitions):**
+6. **Check for mandatory pause (unblinding transitions):**
    If the NEXT wave (N+1) requires a blinding status that differs from current:
    - Wave 5->6 transition: requires `partial_10pct` -> `unblinded`
    - PAUSE and request physicist authorization (return to step 1 of next iteration)
 
-6. **Proceed to next wave.**
+7. **Proceed to next wave.**
 </step>
 
 <step name="final_summary">
@@ -143,7 +175,7 @@ Generate the final analysis summary:
 
 All 8 waves executed successfully.
 
-**Strategy:** strategy/ANALYSIS_STRATEGY.md
+**Strategy:** analysis/wave0/ANALYSIS_STRATEGY.md
 **Final results:** wave-7 outputs
 **Blinding status:** {final_status}
 

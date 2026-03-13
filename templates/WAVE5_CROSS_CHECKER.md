@@ -34,9 +34,9 @@ tester = SignalInjectionTester(spec)
 injection_results = tester.run_all(mu_values=(0.5, 1.0, 2.0))
 # injection_results: {
 #   "tests": [
-#     {"mu_injected": 0.5, "mu_fitted": float, "pull": float, "converged": bool},
-#     {"mu_injected": 1.0, "mu_fitted": float, "pull": float, "converged": bool},
-#     {"mu_injected": 2.0, "mu_fitted": float, "pull": float, "converged": bool},
+#     {"mu_injected": 0.5, "mu_hat": float, "pull": float, "converged": bool},
+#     {"mu_injected": 1.0, "mu_hat": float, "pull": float, "converged": bool},
+#     {"mu_injected": 2.0, "mu_hat": float, "pull": float, "converged": bool},
 #   ],
 #   "all_pass": bool  # True if all |pull| < 1.0
 # }
@@ -44,7 +44,7 @@ injection_results = tester.run_all(mu_values=(0.5, 1.0, 2.0))
 
 ### Injection Results
 
-| mu_injected | mu_fitted | Pull (sigma) | Converged | Pass (|pull| < 1.0) |
+| mu_injected | mu_hat | Pull (sigma) | Converged | Pass (|pull| < 1.0) |
 |------------|-----------|-------------|-----------|---------------------|
 | 0.5 | <!-- AGENT: value --> | <!-- AGENT: value --> | <!-- AGENT: yes/no --> | |
 | 1.0 | <!-- AGENT: value --> | <!-- AGENT: value --> | <!-- AGENT: yes/no --> | |

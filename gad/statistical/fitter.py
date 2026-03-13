@@ -154,12 +154,17 @@ class Fitter:
             - observed_limit: float (observed 95% CL upper limit)
             - expected_limit: float (median expected)
             - bands: dict with keys "-2", "-1", "+1", "+2" (sigma bands)
+            - mu_hat: float (best-fit signal strength from MLE)
         """
         model, data = self._get_model_and_data(asimov=False)
         kwargs = {"maxsteps": maxsteps}
         if bracket is not None:
             kwargs["bracket"] = bracket
         limit_results = cabinetry.fit.limit(model, data, **kwargs)
+
+        # MLE fit for best-fit signal strength
+        fit_results = cabinetry.fit.fit(model, data)
+        mu_hat = float(fit_results.bestfit[model.config.poi_index])
 
         exp = limit_results.expected_limit
 
@@ -172,4 +177,5 @@ class Fitter:
                 "+1": float(exp[3]),
                 "+2": float(exp[4]),
             },
+            "mu_hat": mu_hat,
         }

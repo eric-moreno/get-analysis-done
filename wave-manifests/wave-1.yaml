@@ -3,7 +3,7 @@ description: "Foundation"
 clear_context: true
 
 load_artifacts:
-  - path: "strategy/ANALYSIS_STRATEGY.md"
+  - path: "analysis/wave0/ANALYSIS_STRATEGY.md"
     reason: "Approved analysis strategy guiding all foundation work"
   - path: "gate-results/gate-0-to-1-RESULT.json"
     reason: "Gate result confirming strategy completeness"
@@ -15,11 +15,11 @@ agents:
   - lead-analyst
 
 outputs:
-  - path: "foundation/LITERATURE_REVIEW.md"
+  - path: "analysis/wave1/theory/literature_review.md"
     description: "Theory predictions, existing measurements, and key references"
-  - path: "foundation/SAMPLE_INVENTORY.md"
+  - path: "analysis/wave1/SAMPLE_INVENTORY.md"
     description: "Available MC and data samples with cross-sections and luminosities"
-  - path: "foundation/OBJECT_DEFINITIONS.md"
+  - path: "analysis/wave1/OBJECT_DEFINITIONS.md"
     description: "Physics object selection criteria (electrons, muons, jets, MET)"
   - path: "gate-results/gate-1-to-2-RESULT.json"
     description: "Gate evaluation result for Wave 1 to Wave 2 transition"

@@ -53,26 +53,25 @@ evaluator = SystematicEvaluator()
 
 # Weight-based systematic (e.g., b-tagging SF)
 btag_result = evaluator.evaluate_weight_variation(
-    nominal_hist=nominal, up_hist=btag_up, down_hist=btag_down,
-    name="btag_sf"
+    nominal_template=nominal, up_weights=btag_up, down_weights=btag_down,
+    values=obs_values, bin_edges=edges
 )
 btag_modifier = evaluator.make_modifier("btag_sf", btag_result)
-# btag_modifier: {"name": "btag_sf", "type": "histosys", "data": {"hi_data": [...], "lo_data": [...]}}
+# btag_result: {"up_yields": [...], "down_yields": [...], "nominal_yields": [...], "type": "histosys"}
 
 # Shape-based systematic (e.g., ISR variation)
 isr_result = evaluator.evaluate_shape_variation(
-    nominal_hist=nominal, varied_hist=isr_up,
-    name="isr", symmetrize=True
+    nominal_template=nominal, up_template=isr_up, down_template=isr_down
 )
 isr_modifier = evaluator.make_modifier("isr_qqbar", isr_result)
+# isr_result: {"up_yields": [...], "down_yields": [...], "nominal_yields": [...], "type": "histosys"}
 
 # Normalization-only systematic (e.g., luminosity)
 lumi_result = evaluator.evaluate_normalization(
-    nominal_yield=1000, up_yield=1023, down_yield=977,
-    name="lumi"
+    nominal_yield=1000, up_scale=1.023, down_scale=0.977
 )
 lumi_modifier = evaluator.make_modifier("lumi", lumi_result)
-# lumi_modifier: {"name": "lumi", "type": "normsys", "data": {"hi": 1.023, "lo": 0.977}}
+# lumi_result: {"type": "normsys", "hi": 1.023, "lo": 0.977}
 
 # NP naming convention
 exp_name = evaluator.build_modifier_name("btag_sf", correlated=True)
@@ -82,62 +81,69 @@ thy_name = evaluator.build_modifier_name("isr", process="qqbar", correlated=Fals
 
 # Pruning: remove systematics with < 0.5% effect on any bin
 pruner = SystematicPruner(threshold=0.005)
-kept_modifiers, pruned_modifiers = pruner.prune(all_modifiers)
+result = pruner.prune_systematics(evaluations)
+# result: {"kept": [...], "pruned": [...], "summary": {"n_total": int, "n_kept": int, "n_pruned": int, "threshold": float}}
+kept_modifiers = result["kept"]
+pruned_modifiers = result["pruned"]
 
 # --- Workspace Construction ---
 builder = WorkspaceBuilder()
-builder.add_channel("SR", observations=obs_sr,
-                    samples={"signal": sig_template, "qqbar": qqbar_template})
-builder.add_channel("CR_qqbar", observations=obs_cr,
-                    samples={"qqbar": qqbar_cr_template})
-# Add all kept modifiers
-for mod in kept_modifiers:
-    builder.add_modifier(mod["name"], mod["type"], mod["data"],
-                         channels=mod.get("channels"), samples=mod.get("samples"))
+builder.add_channel("SR", observed=obs_sr)
+builder.add_sample("SR", "signal", sig_template, modifiers=[btag_modifier, lumi_modifier])
+builder.add_sample("SR", "qqbar", qqbar_template, modifiers=[isr_modifier, lumi_modifier])
+builder.add_channel("CR_qqbar", observed=obs_cr)
+builder.add_sample("CR_qqbar", "qqbar", qqbar_cr_template, modifiers=[isr_modifier, lumi_modifier])
+# Add additional modifiers individually (channel_name, sample_name, modifier_dict)
+for mod in extra_modifiers:
+    builder.add_modifier(mod["channel"], mod["sample"], mod)
 workspace = builder.build()
 
 # Validate with Asimov fit (NP pulls should be < 0.5 sigma)
 validation = builder.validate_asimov(workspace)
-assert validation["converged"], "Asimov fit failed to converge"
-assert validation["max_np_pull"] < 0.5, f"Max NP pull {validation['max_np_pull']:.2f} > 0.5"
+# Returns: {"valid": bool, "pulls": dict, "max_pull": float, "fit_results": FitResults}
+assert validation["valid"], "Asimov fit failed validation"
+assert validation["max_pull"] < 0.5, f"Max NP pull {validation['max_pull']:.2f} > 0.5"
 
 # --- Expected Limit ---
 fitter = Fitter(workspace)
 limit = fitter.expected_limit()
-# limit: {"observed": None, "minus2": float, "minus1": float,
-#          "median": float, "plus1": float, "plus2": float}
+# limit: {"observed_limit": None, "expected_limit": float,
+#          "bands": {"-2": float, "-1": float, "+1": float, "+2": float}}
 
 # Asimov fit for diagnostics
 asimov_result = fitter.fit_asimov()
 
 # --- Fit Diagnostics ---
-diag = Diagnostics(workspace)
+# Obtain fit_results first (required by most diagnostic methods)
+fit_results = fitter.fit(asimov=True)
+
+diag = Diagnostics(workspace, output_dir="analysis/wave4/statmodel/fit_diagnostics", experiment_style="ATLAS")
 all_diag = diag.run_all_diagnostics()
 # Produces: pull_plot, ranking_plot, correlation_matrix, gof_test, likelihood_scan
 
 # Individual diagnostics
-pulls = diag.pull_plot(output="analysis/wave4/statmodel/fit_diagnostics/pull_plot.pdf")
-ranking = diag.ranking_plot(output="analysis/wave4/statmodel/fit_diagnostics/ranking_plot.pdf")
-corr = diag.correlation_matrix(output="analysis/wave4/statmodel/fit_diagnostics/correlation_matrix.pdf")
-gof = diag.gof_test()  # {"test_statistic": float, "p_value": float, "ndf": int}
-scan = diag.likelihood_scan(poi="mu", output="analysis/wave4/statmodel/fit_diagnostics/likelihood_scan.pdf")
+pull_path = diag.pull_plot(fit_results)                              # Returns: str (path)
+ranking_results, ranking_path = diag.ranking_plot(fit_results=fit_results)  # Returns: (ranking_results, path)
+corr_path = diag.correlation_matrix(fit_results)                     # Returns: str (path)
+gof = diag.gof_test()  # {"gof_stat": float, "p_value": float, "saturated": bool}
+scan_results, scan_path = diag.likelihood_scan(par_name="mu")        # Returns: (scan_results, path)
 
-# Constraint analysis for top 5 NPs
-constraints = diag.constraint_analysis(top_n=5)
-# constraints: [{"name": str, "prefit_unc": 1.0, "postfit_unc": float, "constraint_factor": float, "impact_mu": float}]
+# Constraint analysis for top 5 NPs (requires fit_results and ranking_results)
+constraints = diag.constraint_analysis(fit_results, ranking_results, top_n=5)
+# constraints: [{"name": str, "pre_fit_unc": 1.0, "post_fit_unc": float, "constraint_factor": float, "impact_on_mu": float}]
 
 # --- CMS Combine Export ---
-exporter = DatacardExporter(workspace)
-exporter.export(output_dir="analysis/wave4/statmodel/combine_datacards/")
+exporter = DatacardExporter()
+exporter.export(workspace_spec=workspace, output_dir="analysis/wave4/statmodel/combine_datacards/")
 
 # --- Sensitivity Optimization ---
 optimizer = SensitivityOptimizer()
-comparison = optimizer.compare_configurations([
-    {"name": "baseline", "workspace": ws_baseline},
-    {"name": "coarser_binning", "workspace": ws_coarse},
-    {"name": "aggressive_pruning", "workspace": ws_pruned},
-])
-# comparison: [{"name": str, "expected_limit": float, "n_nps": int, "n_channels": int}]
+comparison = optimizer.compare_configurations({
+    "baseline": ws_baseline,
+    "coarser_binning": ws_coarse,
+    "aggressive_pruning": ws_pruned,
+})
+# comparison: pandas.DataFrame with columns: config, expected_limit, band_m2, band_m1, band_p1, band_p2, best
 ```
 
 ### CRITICAL Notes
@@ -207,22 +213,22 @@ fitter = Fitter(spec)
 
 # Observed limit (RSLT-01)
 obs_results = fitter.observed_limit()
-# obs_results: {"observed_limit": float, "expected_limit": {...}, "mu_hat": float, "converged": bool}
+# obs_results: {"observed_limit": float, "expected_limit": float, "bands": {"-2": f, "-1": f, "+1": f, "+2": f}}
 
 # Post-fit with observed data (asimov=False)
 fit_results = fitter.fit(asimov=False)
 
 # Post-fit diagnostics (RSLT-02)
-diag = Diagnostics(spec, output_dir="analysis/wave6/diagnostics")
-diag.pull_plot(fit_results)
-diag.ranking_plot(fit_results)
-diag.correlation_matrix(fit_results)
-diag.likelihood_scan("mu")
-diag.gof_test()
+diag = Diagnostics(spec, output_dir="analysis/wave6/diagnostics", experiment_style="ATLAS")
+pull_path = diag.pull_plot(fit_results)
+ranking_results, ranking_path = diag.ranking_plot(fit_results=fit_results)
+corr_path = diag.correlation_matrix(fit_results)
+scan_results, scan_path = diag.likelihood_scan(par_name="mu")
+gof = diag.gof_test()  # {"gof_stat": float, "p_value": float, "saturated": bool}
 
 # CMS Combine observed
-exporter = DatacardExporter(spec)
-exporter.export(output_dir="analysis/wave6/combine/", observed=True)
+exporter = DatacardExporter()
+exporter.export(workspace_spec=spec, output_dir="analysis/wave6/combine/")
 ```
 
 ### CRITICAL Notes

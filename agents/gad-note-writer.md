@@ -125,62 +125,36 @@ mu_hat = obs_results["mu_hat"]
 Compile LaTeX with full bibliography resolution:
 
 ```python
-import subprocess
-from pathlib import Path
+from gad.documentation.compiler import compile_note, check_undefined_references
 
-def compile_note(tex_dir, main_file="main.tex"):
-    base = Path(main_file).stem
-    commands = [
-        ["pdflatex", "-interaction=nonstopmode", main_file],
-        ["bibtex", base],
-        ["pdflatex", "-interaction=nonstopmode", main_file],
-        ["pdflatex", "-interaction=nonstopmode", main_file],
-    ]
-    for cmd in commands:
-        subprocess.run(cmd, cwd=tex_dir, capture_output=True, text=True, timeout=120, check=False)
+result = compile_note("analysis/wave7/note", main_file="main.tex")
+# result: {"success": bool, "pdf_path": str or None, "errors": list, "warnings": list}
+assert result["success"], f"Compilation failed: {result['errors']}"
 
-    pdf_path = Path(tex_dir) / f"{base}.pdf"
-    assert pdf_path.exists(), "PDF not generated"
-    return str(pdf_path)
+undefined = check_undefined_references("analysis/wave7/note")
+assert len(undefined) == 0, f"Undefined references: {undefined}"
 ```
 
 Regenerate all plots with mplhep experiment styling:
 
 ```python
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-try:
-    import mplhep
-    style = getattr(mplhep.style, experiment_style, None)
-    if style is not None:
-        plt.style.use(style)
-except (ImportError, AttributeError):
-    pass
+from gad.documentation.plots import setup_experiment_style, regenerate_all_plots
 
-# Regenerate all plots as PDF
-# fig.savefig("analysis/wave7/note/figures/plot_name.pdf", bbox_inches="tight")
+setup_experiment_style(experiment_style)
+
+result = regenerate_all_plots(plot_config)
+# result: {"total": int, "generated": int, "failed": list}
+assert len(result["failed"]) == 0, f"Failed plots: {result['failed']}"
 ```
 
 Verify self-containedness (no unfilled AGENT directives, all figures exist):
 
 ```python
-import re
-from pathlib import Path
+from gad.documentation.verification import verify_self_contained, generate_verification_report
 
-note_dir = Path("analysis/wave7/note")
-for tex_file in note_dir.glob("*.tex"):
-    content = tex_file.read_text()
-    # Check for unfilled AGENT directive placeholders
-    placeholders = re.findall(r'% AGENT:.*\[(?:value|PASS/FAIL|count|yes/no)\]', content)
-    assert len(placeholders) == 0, f"Unfilled placeholders in {tex_file.name}: {placeholders}"
-    # Check all figures exist
-    figs = re.findall(r'\\includegraphics.*?\{(.+?)\}', content)
-    for fig in figs:
-        fig_path = note_dir / fig
-        if not fig_path.exists():
-            fig_path = note_dir / "figures" / fig
-        assert fig_path.exists(), f"Missing figure: {fig}"
+checks = verify_self_contained("analysis/wave7/note")
+report = generate_verification_report(checks)
+# Write report to analysis/wave7/note/VERIFICATION_REPORT.md
 ```
 
 ### Section-to-Source Mapping (Wave 7 additions)

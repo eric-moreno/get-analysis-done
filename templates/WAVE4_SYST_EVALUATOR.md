@@ -21,19 +21,18 @@ evaluator = SystematicEvaluator()
 
 # Weight-based systematic (e.g., b-tagging SF)
 result = evaluator.evaluate_weight_variation(
-    nominal_hist=nominal, up_hist=btag_up, down_hist=btag_down,
-    name="btag_sf"
+    nominal_template=nominal, up_weights=btag_up, down_weights=btag_down,
+    values=obs_values, bin_edges=edges
 )
 modifier = evaluator.make_modifier("btag_sf", result)
-# modifier: {"name": "btag_sf", "type": "histosys", "data": {"hi_data": [...], "lo_data": [...]}}
+# result: {"up_yields": [...], "down_yields": [...], "nominal_yields": [...], "type": "histosys"}
 
 # Normalization-only systematic (e.g., luminosity)
 result = evaluator.evaluate_normalization(
-    nominal_yield=1000, up_yield=1023, down_yield=977,
-    name="lumi"
+    nominal_yield=1000, up_scale=1.023, down_scale=0.977
 )
 modifier = evaluator.make_modifier("lumi", result)
-# modifier: {"name": "lumi", "type": "normsys", "data": {"hi": 1.023, "lo": 0.977}}
+# result: {"type": "normsys", "hi": 1.023, "lo": 0.977}
 ```
 
 | Source | Type | Affected Processes | Max Fractional Effect | NP Name |
@@ -77,10 +76,10 @@ modifier = evaluator.make_modifier("lumi", result)
 ```python
 # Shape-based systematic (e.g., ISR variation)
 result = evaluator.evaluate_shape_variation(
-    nominal_hist=nominal, varied_hist=isr_up,
-    name="isr", symmetrize=True
+    nominal_template=nominal, up_template=isr_up, down_template=isr_down
 )
 modifier = evaluator.make_modifier("isr_qqbar", result)
+# result: {"up_yields": [...], "down_yields": [...], "nominal_yields": [...], "type": "histosys"}
 # NP name includes process: build_modifier_name("isr", process="qqbar", correlated=False)
 ```
 
@@ -106,7 +105,10 @@ modifier = evaluator.make_modifier("isr_qqbar", result)
 from gad.systematics import SystematicPruner
 
 pruner = SystematicPruner(threshold=0.005)  # 0.5%
-kept, pruned = pruner.prune(all_modifiers)
+result = pruner.prune_systematics(evaluations)
+# result: {"kept": [...], "pruned": [...], "summary": {"n_total": int, "n_kept": int, "n_pruned": int, "threshold": float}}
+kept = result["kept"]
+pruned = result["pruned"]
 ```
 
 | Category | Total Sources | Kept | Pruned | Threshold |
